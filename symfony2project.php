@@ -406,7 +406,8 @@ Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--
 
 --app        : Application name (mandatory)
 --path       : Directory name (path) (default: current dir)
---controller : Your first controller name (you can change it later) (optional)
+--controller : Your first controller name (optional)
+               (suggestion: home or main, you can change it later if you change your mind)
 
 
 EOF;
