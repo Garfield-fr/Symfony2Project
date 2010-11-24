@@ -408,7 +408,7 @@ Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--
 --path       : Directory name (path) (default: current dir)
 --controller : Your first controller name (optional)
                (suggestion: home or main, you can change it later if you change your mind)
-
+--protocol   : git or http (if git is not enable in your company)
 
 EOF;
 exit;
@@ -432,6 +432,15 @@ if (!$app = @$params['app'])
 if (!$dir = @$params['path'])
 {
   $dir = dirname(__FILE__);
+}
+
+$protocols = array('http', 'git');
+$protocol = "git";
+if($pro = @$params['protocol'])
+{
+    if(in_array($pro, $protocols)){
+        $protocol = $pro;
+    }
 }
 
 if ($controller = @$params['controller'])
@@ -543,6 +552,7 @@ $git_repository = array(
 
 foreach ($git_repository as $source => $target)
 {
+  $source = preg_replace('/git/', $protocol, $source, 1);
   echo "--> $source\n";
   exec("git submodule add $source $target");
 }
