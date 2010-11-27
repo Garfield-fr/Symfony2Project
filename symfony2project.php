@@ -173,7 +173,8 @@ app.config:
         auto_start:     %start%
 
 twig.config:
-    debug: "%kernel.debug%"
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
 
 ## Doctrine Configuration
 #doctrine.dbal:
