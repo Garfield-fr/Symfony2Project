@@ -169,7 +169,8 @@ app.config:
     templating:    {} #assets_version: SomeVersionScheme
     session:
         default_locale: en
-        lifetime: 3600
+        lifetime:       3600
+        auto_start:     %start%
 
 twig.config:
     debug: "%kernel.debug%"
@@ -402,13 +403,14 @@ if (0 == count($argv))
 {
   echo <<<'EOF'
 
-Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName]
+Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true]
 
---app        : Application name (mandatory)
---path       : Directory name (path) (default: current dir)
---controller : Your first controller name (optional)
-               (suggestion: home or main, you can change it later if you change your mind)
---protocol   : git or http (if git is not enable in your company)
+--app           : Application name (mandatory)
+--path          : Directory name (path) (default: current dir)
+--controller    : Your first controller name (optional)
+                  (suggestion: home or main, you can change it later if you change your mind)
+--protocol      : git or http (if git is not enable in your company)
+--session-start : false ou true (auto_start parameter on session)
 
 EOF;
 exit;
@@ -446,6 +448,11 @@ if($pro = @$params['protocol'])
 if ($controller = @$params['controller'])
 {
   $with_controller = true;
+}
+
+if (!$session_autostart = @$params['session-start'])
+{
+  $session_autostart = "false";
 }
 
 if (!is_dir($dir) || !is_writable($dir))
@@ -501,7 +508,7 @@ file_put_contents('app/phpunit.xml', $app_phpunit);
 file_put_contents('app/.htaccess', $deny_htaccess);
 file_put_contents('src/.htaccess', $deny_htaccess);
 file_put_contents('web/.htaccess', $web_htaccess);
-file_put_contents('app/config/config.yml', $config_yml);
+file_put_contents('app/config/config.yml', str_replace('%start%', $session_autostart, $config_yml));
 file_put_contents('app/config/config_dev.yml', $config_dev_yml);
 file_put_contents('app/config/config_prod.yml', $config_prod_yml);
 $routing_yml = ($with_controller ? $routing_with_controller_yml : $routing_yml);
@@ -534,6 +541,7 @@ else
 chmod('app/cache', 0777);
 chmod('app/logs', 0777);
 chmod('app/console', 0755);
+exit;
 
 exec('git init');
 
