@@ -540,7 +540,7 @@ exec('git init');
 $git_repository = array(
   'git://github.com/fabpot/symfony.git'           => 'src/vendor/symfony',
   'git://github.com/doctrine/doctrine2.git'       => 'src/vendor/doctrine',
-  'git://github.com/doctrine/data-fixtures'       => 'src/vendor/doctrine-data-fixtures',
+  'git://github.com/doctrine/data-fixtures.git'   => 'src/vendor/doctrine-data-fixtures',
   'git://github.com/doctrine/dbal.git'            => 'src/vendor/doctrine-dbal',
   'git://github.com/doctrine/common.git'          => 'src/vendor/doctrine-common',
   'git://github.com/doctrine/migrations.git'      => 'src/vendor/doctrine-migrations',
