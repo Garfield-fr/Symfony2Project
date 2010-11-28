@@ -546,7 +546,7 @@ chmod('app/console', 0755);
 exec('git init');
 
 $git_repository = array(
-  'git://github.com/fabpot/symfony.git'           => 'src/vendor/symfony',
+  'git://github.com/symfony/symfony.git'          => 'src/vendor/symfony',
   'git://github.com/doctrine/doctrine2.git'       => 'src/vendor/doctrine',
   'git://github.com/doctrine/data-fixtures.git'   => 'src/vendor/doctrine-data-fixtures',
   'git://github.com/doctrine/dbal.git'            => 'src/vendor/doctrine-dbal',
