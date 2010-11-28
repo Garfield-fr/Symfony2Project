@@ -496,7 +496,8 @@ if (!$test)
 }
 
 // Start Install
-echo "Install to $dir\n";
+echo "\n";
+echo "-> Install to $dir\n";
 
 chdir($dir);
 
@@ -559,7 +560,10 @@ chmod('app/cache', 0777);
 chmod('app/logs', 0777);
 chmod('app/console', 0755);
 
+echo "\n";
+echo "-> Init git project";
 exec('git init');
+echo "\n";
 
 $git_repository = array(
   'git://github.com/'.$repository.'/symfony.git'          => 'src/vendor/symfony',
@@ -574,6 +578,8 @@ $git_repository = array(
   'git://github.com/zendframework/zf2.git'                => 'src/vendor/zend',
 );
 
+echo "\n";
+echo "-> Init and update submodules\n";
 foreach ($git_repository as $source => $target)
 {
   $source = preg_replace('/git/', $protocol, $source, 1);
@@ -588,11 +594,14 @@ exec('app/console assets:install --symlink web');
 @remove('app/cache/dev');
 @unlink('app/logs/dev.log');
 
-
-echo "Generation of Symfony2 project terminated\n";
-echo "Homepage : http::[domain]/index_dev.php\n";
-echo "$controller : http::[domain]/index_dev.php/$controller\n";
-
+echo "\n";
+echo "-> Generation of Symfony2 project terminated\n";
+echo "\n";
+echo "Homepage: http://[domain]/index_dev.php\n";
+if ($with_controller)
+{
+    echo "$controller: http://[domain]/index_dev.php/$controller\n";
+}
 
 
 // ---- FUNCTION (Symfony2 core)
