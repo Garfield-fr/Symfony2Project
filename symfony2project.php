@@ -24,6 +24,11 @@ $web_htaccess = <<<'EOF'
 </IfModule>
 EOF;
 
+$web_robots = <<<'EOF'
+User-agent: *
+Allow: /
+EOF;
+
 $app_cache = <<<'EOF'
 <?php
 
@@ -56,14 +61,14 @@ class AppKernel extends Kernel
         $bundles = array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
-            
+
             // enable third-party bundles
             new Symfony\Bundle\ZendBundle\ZendBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
             //new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
             //new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
-            
+
             new Application\%app%Bundle\%app%Bundle(),
         );
 
@@ -519,6 +524,7 @@ file_put_contents('app/phpunit.xml', $app_phpunit);
 file_put_contents('app/.htaccess', $deny_htaccess);
 file_put_contents('src/.htaccess', $deny_htaccess);
 file_put_contents('web/.htaccess', $web_htaccess);
+file_put_contents('web/robots.txt', $web_robots);
 file_put_contents('app/config/config.yml', str_replace('%start%', $session_autostart, $config_yml));
 file_put_contents('app/config/config_dev.yml', $config_dev_yml);
 file_put_contents('app/config/config_prod.yml', $config_prod_yml);
@@ -537,11 +543,11 @@ if ($with_controller)
 {
   $cpath = "$app_folder/Controller/".$controller."Controller.php";
   file_put_contents($cpath, str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_bundle));
-  
+
   $ftpath = "$app_folder/Resources/views/$controller";
   mkdir($ftpath);
   file_put_contents($ftpath.'/index.twig', str_replace('%controller%', $controller, $controller_template));
-  
+
   file_put_contents($app_folder.'/Resources/config/routing.yml', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_routing));
 }
 else
