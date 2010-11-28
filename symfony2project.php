@@ -404,14 +404,15 @@ if (0 == count($argv))
 {
   echo <<<'EOF'
 
-Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true]
+Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true] [--symfony-repository=fabpot|symfony]
 
---app           : Application name (mandatory)
---path          : Directory name (path) (default: current dir)
---controller    : Your first controller name (optional)
-                  (suggestion: home or main, you can change it later if you change your mind)
---protocol      : git or http (if git is not enable in your company)
---session-start : false ou true (auto_start parameter on session) (default: false)
+--app                : Application name (mandatory)
+--path               : Directory name (path) (default: current dir)
+--controller         : Your first controller name (optional)
+                       (suggestion: home or main, you can change it later if you change your mind)
+--protocol           : git or http (if git is not enable in your company)
+--session-start      : false or true (auto_start parameter on session) (default: false)
+--symfony-repository : fabpot or symfony (default: symfony)
 
 EOF;
 exit;
@@ -454,6 +455,15 @@ if ($controller = @$params['controller'])
 if (!$session_autostart = @$params['session-start'])
 {
   $session_autostart = "false";
+}
+
+$repositories = array('fabpot', 'symfony');
+$repository = "symfony";
+if($repo = @$params['symfony-repository'])
+{
+    if(in_array($repository, $repositories)){
+        $repository = $repo;
+    }
 }
 
 if (!is_dir($dir) || !is_writable($dir))
@@ -546,16 +556,16 @@ chmod('app/console', 0755);
 exec('git init');
 
 $git_repository = array(
-  'git://github.com/symfony/symfony.git'          => 'src/vendor/symfony',
-  'git://github.com/doctrine/doctrine2.git'       => 'src/vendor/doctrine',
-  'git://github.com/doctrine/data-fixtures.git'   => 'src/vendor/doctrine-data-fixtures',
-  'git://github.com/doctrine/dbal.git'            => 'src/vendor/doctrine-dbal',
-  'git://github.com/doctrine/common.git'          => 'src/vendor/doctrine-common',
-  'git://github.com/doctrine/migrations.git'      => 'src/vendor/doctrine-migrations',
-  'git://github.com/doctrine/mongodb-odm.git'     => 'src/vendor/doctrine-mongodb',
-  'git://github.com/swiftmailer/swiftmailer.git'  => 'src/vendor/swiftmailer',
-  'git://github.com/fabpot/Twig.git'              => 'src/vendor/twig',
-  'git://github.com/zendframework/zf2.git'        => 'src/vendor/zend',
+  'git://github.com/'.$repository.'/symfony.git'          => 'src/vendor/symfony',
+  'git://github.com/doctrine/doctrine2.git'               => 'src/vendor/doctrine',
+  'git://github.com/doctrine/data-fixtures.git'           => 'src/vendor/doctrine-data-fixtures',
+  'git://github.com/doctrine/dbal.git'                    => 'src/vendor/doctrine-dbal',
+  'git://github.com/doctrine/common.git'                  => 'src/vendor/doctrine-common',
+  'git://github.com/doctrine/migrations.git'              => 'src/vendor/doctrine-migrations',
+  'git://github.com/doctrine/mongodb-odm.git'             => 'src/vendor/doctrine-mongodb',
+  'git://github.com/swiftmailer/swiftmailer.git'          => 'src/vendor/swiftmailer',
+  'git://github.com/fabpot/Twig.git'                      => 'src/vendor/twig',
+  'git://github.com/zendframework/zf2.git'                => 'src/vendor/zend',
 );
 
 foreach ($git_repository as $source => $target)
