@@ -542,7 +542,6 @@ else
 chmod('app/cache', 0777);
 chmod('app/logs', 0777);
 chmod('app/console', 0755);
-exit;
 
 exec('git init');
 
