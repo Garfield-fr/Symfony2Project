@@ -384,6 +384,11 @@ $controller_routing = <<<'EOF'
     defaults: { _controller: %app%Bundle:%controller%:index }
 EOF;
 
+$git_ignore = <<<'EOF'
+app/cache/*
+app/logs/*
+EOF;
+
 
 // ----------------- STRUCTURE
 $folders = array(
@@ -555,6 +560,8 @@ else
 {
   file_put_contents($app_folder.'/Resources/config/routing.yml', '');
 }
+
+file_put_contents('.gitignore', $git_ignore);
 
 chmod('app/cache', 0777);
 chmod('app/logs', 0777);
