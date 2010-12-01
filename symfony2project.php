@@ -173,6 +173,7 @@ app.config:
         default_locale: en
         lifetime:       3600
         auto_start:     %start%
+        name:           %sessionname%
 
 twig.config:
     debug:            %kernel.debug%
@@ -429,7 +430,7 @@ if (0 == count($argv))
 {
   echo <<<'EOF'
 
-Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true] [--symfony-repository=fabpot|symfony] [--with-db=false|true]
+Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true]
 
 --app                : Application name (mandatory)
 --path               : Directory name (path) (default: current dir)
@@ -437,6 +438,7 @@ Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--
                        (suggestion: home or main, you can change it later if you change your mind)
 --protocol           : git or http (if git is not enable in your company)
 --session-start      : false or true (auto_start parameter on session) (default: false)
+--session-name       : Session name (default: Application name)
 --symfony-repository : fabpot or symfony (default: symfony)
 --with-db            : false or true (default: true)
 
@@ -482,6 +484,11 @@ if ($controller = @$params['controller'])
 if (!$session_autostart = @$params['session-start'])
 {
   $session_autostart = "false";
+}
+
+if (!$session_name = @$params['session-name'])
+{
+  $session_name = $app;
 }
 
 $repositories = array('fabpot', 'symfony');
@@ -587,6 +594,8 @@ file_put_contents('web/.htaccess', $web_htaccess);
 file_put_contents('web/robots.txt', $web_robots);
 
 $config_yml = str_replace('%start%', $session_autostart, $config_yml);
+
+$config_yml = str_replace('%sessionname%', $session_name, $config_yml);
 if ($with_db)
 {
   $config_yml = str_replace('%configdb%', $config_db_yml, $config_yml);
