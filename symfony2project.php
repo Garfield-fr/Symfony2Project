@@ -65,10 +65,7 @@ class AppKernel extends Kernel
             // enable third-party bundles
             new Symfony\Bundle\ZendBundle\ZendBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
-            new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
-            //new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
-            //new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
-
+%class%
             new Application\%app%Bundle\%app%Bundle(),
         );
 
@@ -180,14 +177,7 @@ app.config:
 twig.config:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
-
-## Doctrine Configuration
-#doctrine.dbal:
-#    dbname:   xxxxxxxx
-#    user:     xxxxxxxx
-#    password: ~
-#doctrine.orm: ~
-
+%configdb%
 ## Swiftmailer Configuration
 #swiftmailer.config:
 #    transport:  smtp
@@ -196,6 +186,18 @@ twig.config:
 #    host:       smtp.gmail.com
 #    username:   xxxxxxxx
 #    password:   xxxxxxxx
+EOF;
+
+$config_db_yml = <<<'EOF'
+
+## Doctrine Configuration
+#doctrine.dbal:
+#    dbname:   xxxxxxxx
+#    user:     xxxxxxxx
+#    password: ~
+#doctrine.orm: ~
+
+
 EOF;
 
 $config_dev_yml = <<<'EOF'
@@ -278,16 +280,7 @@ use Symfony\Component\HttpFoundation\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
-    'Symfony'                        => $vendorDir.'/symfony/src',
-    'Application'                    => __DIR__,
-    'Bundle'                         => __DIR__,
-    'Doctrine\\ODM\\MongoDB'         => $vendorDir.'/doctrine-mongodb/lib',
-    'Doctrine\\Common\\DataFixtures' => $vendorDir.'/doctrine-data-fixtures/lib',
-    'Doctrine\\Common'               => $vendorDir.'/doctrine-common/lib',
-    'Doctrine\\DBAL\\Migrations'     => $vendorDir.'/doctrine-migrations/lib',
-    'Doctrine\\DBAL'                 => $vendorDir.'/doctrine-dbal/lib',
-    'Doctrine'                       => $vendorDir.'/doctrine/lib',
-    'Zend'                           => $vendorDir.'/zend/library',
+%loader%
 ));
 $loader->registerPrefixes(array(
     'Swift_' => $vendorDir.'/swiftmailer/lib/classes',
@@ -389,6 +382,28 @@ app/cache/*
 app/logs/*
 EOF;
 
+$loader_array = array(
+  'Symfony' => '$vendorDir.\'/symfony/src\'',
+  'Application' => '__DIR__',
+  'Bundle' => '__DIR__',
+  'Zend' => '$vendorDir.\'/zend/library\''
+);
+
+$loader_db_array = array(
+  'Doctrine\\\\ODM\\\\MongoDB' => '$vendorDir.\'/doctrine-mongodb/lib\'',
+  'Doctrine\\\\Common\\\\DataFixtures' => '$vendorDir.\'/doctrine-data-fixtures/lib\'',
+  'Doctrine\\\\Common' => '$vendorDir.\'/doctrine-common/lib\'',
+  'Doctrine\\\\DBAL\\\\Migrations' => '$vendorDir.\'/doctrine-migrations/lib\'',
+  'Doctrine\\\\DBAL' => '$vendorDir.\'/doctrine-dbal/lib\'',
+  'Doctrine' => '$vendorDir.\'/doctrine/lib\''
+);
+
+$kernel_class = <<<'EOF'
+            new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
+            //new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
+            //new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
+
+EOF;
 
 // ----------------- STRUCTURE
 $folders = array(
@@ -414,7 +429,7 @@ if (0 == count($argv))
 {
   echo <<<'EOF'
 
-Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true] [--symfony-repository=fabpot|symfony]
+Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true] [--symfony-repository=fabpot|symfony] [--with-db=false|true]
 
 --app                : Application name (mandatory)
 --path               : Directory name (path) (default: current dir)
@@ -423,6 +438,8 @@ Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--
 --protocol           : git or http (if git is not enable in your company)
 --session-start      : false or true (auto_start parameter on session) (default: false)
 --symfony-repository : fabpot or symfony (default: symfony)
+--with-db            : false or true (default: true)
+
 
 EOF;
 exit;
@@ -476,6 +493,33 @@ if($repo = @$params['symfony-repository'])
     }
 }
 
+$with_db = ((!@$params['with-db']) || ('true' === @$params['with-db'])) ? true : false;
+
+if ($with_db)
+{
+  $loader_array = array_merge($loader_array, $loader_db_array);
+}
+
+$loader_key_size = 0;
+foreach ($loader_array as $key => $value)
+{
+  if ($loader_key_size < strlen($key))
+  {
+    $loader_key_size = strlen($key);
+  }
+}
+$loader_key_size = $loader_key_size + 3;
+
+$loader_string = '';
+foreach ($loader_array as $key => $value)
+{
+  $size = $loader_key_size - strlen($key);
+  $mask = "    '%s'".str_repeat(' ', $size)." => %s,";
+  $loader_string .= sprintf($mask, $key, $value)."\n";
+}
+$loader_string = rtrim($loader_string);
+
+
 if (!is_dir($dir) || !is_writable($dir))
 {
   echo sprintf("The path %s doesn't exist or not writable\n", $dir);
@@ -524,14 +568,35 @@ foreach ($folders as $folder)
 }
 
 file_put_contents('app/AppCache.php', $app_cache);
-file_put_contents('app/AppKernel.php', str_replace('%app%', $app, $app_kernel));
+
+$app_kernel = str_replace('%app%', $app, $app_kernel);
+if ($with_db)
+{
+  $app_kernel = str_replace('%class%', $kernel_class, $app_kernel);
+}
+else
+{
+  $app_kernel = str_replace('%class%', '', $app_kernel);
+}
+file_put_contents('app/AppKernel.php', $app_kernel);
 file_put_contents('app/console', $app_console);
 file_put_contents('app/phpunit.xml', $app_phpunit);
 file_put_contents('app/.htaccess', $deny_htaccess);
 file_put_contents('src/.htaccess', $deny_htaccess);
 file_put_contents('web/.htaccess', $web_htaccess);
 file_put_contents('web/robots.txt', $web_robots);
-file_put_contents('app/config/config.yml', str_replace('%start%', $session_autostart, $config_yml));
+
+$config_yml = str_replace('%start%', $session_autostart, $config_yml);
+if ($with_db)
+{
+  $config_yml = str_replace('%configdb%', $config_db_yml, $config_yml);
+}
+else
+{
+  $config_yml = str_replace('%configdb%', '', $config_yml);
+}
+
+file_put_contents('app/config/config.yml', $config_yml);
 file_put_contents('app/config/config_dev.yml', $config_dev_yml);
 file_put_contents('app/config/config_prod.yml', $config_prod_yml);
 $routing_yml = ($with_controller ? $routing_with_controller_yml : $routing_yml);
@@ -539,7 +604,8 @@ file_put_contents('app/config/routing.yml', str_replace('%app%', $app, $routing_
 file_put_contents('app/config/routing_dev.yml', $routing_dev_yml);
 file_put_contents('app/views/layout.php', str_replace('%app%', $app, $layout_php));
 file_put_contents('app/views/layout.twig', str_replace('%app%', $app, $layout_twig));
-file_put_contents('src/autoload.php', $autoload);
+
+file_put_contents('src/autoload.php', str_replace('%loader%', $loader_string, $autoload));
 
 file_put_contents($app_folder.'/'.$app.'Bundle.php', str_replace('%app%', $app, $app_bundle));
 file_put_contents('web/index.php', $index_prod);
@@ -574,16 +640,24 @@ echo "\n";
 
 $git_repository = array(
   'git://github.com/'.$repository.'/symfony.git'          => 'src/vendor/symfony',
-  'git://github.com/doctrine/doctrine2.git'               => 'src/vendor/doctrine',
-  'git://github.com/doctrine/data-fixtures.git'           => 'src/vendor/doctrine-data-fixtures',
-  'git://github.com/doctrine/dbal.git'                    => 'src/vendor/doctrine-dbal',
-  'git://github.com/doctrine/common.git'                  => 'src/vendor/doctrine-common',
-  'git://github.com/doctrine/migrations.git'              => 'src/vendor/doctrine-migrations',
-  'git://github.com/doctrine/mongodb-odm.git'             => 'src/vendor/doctrine-mongodb',
   'git://github.com/swiftmailer/swiftmailer.git'          => 'src/vendor/swiftmailer',
   'git://github.com/fabpot/Twig.git'                      => 'src/vendor/twig',
   'git://github.com/zendframework/zf2.git'                => 'src/vendor/zend',
 );
+
+if ($with_db)
+{
+  $git_db_repository = array(
+    'git://github.com/doctrine/doctrine2.git'               => 'src/vendor/doctrine',
+    'git://github.com/doctrine/data-fixtures.git'           => 'src/vendor/doctrine-data-fixtures',
+    'git://github.com/doctrine/dbal.git'                    => 'src/vendor/doctrine-dbal',
+    'git://github.com/doctrine/common.git'                  => 'src/vendor/doctrine-common',
+    'git://github.com/doctrine/migrations.git'              => 'src/vendor/doctrine-migrations',
+    'git://github.com/doctrine/mongodb-odm.git'             => 'src/vendor/doctrine-mongodb',
+  );
+  
+  $git_repository = array_merge($git_repository, $git_db_repository);
+}
 
 echo "\n";
 echo "-> Init and update submodules\n";

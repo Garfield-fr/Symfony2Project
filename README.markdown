@@ -3,17 +3,18 @@
 
 ##Usage
  
-    php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--symfony-repository=fabpot|symfony]
+    php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--symfony-repository=fabpot|symfony] [--with-db=false|true]
 
 ###Arguments
 
-    --app                : application name (mandatory)  
-    --path               : directory name (path) (default: current dir)  
-    --controller         : your first controller name (optional)  
-                           (suggestion: home or main, you can change it later if you change your mind)  
-    --protocol           : git or http (if git is not enable in your company)  
-    --session-start      : false or true (auto_start parameter on session) (default: false)  
-    --symfony-repository : fabpot or symfony (default: symfony)  
+    --app                : application name (mandatory)
+    --path               : directory name (path) (default: current dir)
+    --controller         : your first controller name (optional)
+                           (suggestion: home or main, you can change it later if you change your mind)
+    --protocol           : git or http (if git is not enable in your company)
+    --session-start      : false or true (auto_start parameter on session) (default: false)
+    --symfony-repository : fabpot or symfony (default: symfony)
+    --with-db:           : false or true (default: true)
 
 *Note: only tested on unix system.*
 
