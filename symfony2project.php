@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /*
  * Symfony2 structure project installer
