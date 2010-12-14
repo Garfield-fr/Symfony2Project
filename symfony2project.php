@@ -663,7 +663,8 @@ if ($with_db)
     'git://github.com/doctrine/dbal.git'                    => 'src/vendor/doctrine-dbal',
     'git://github.com/doctrine/common.git'                  => 'src/vendor/doctrine-common',
     'git://github.com/doctrine/migrations.git'              => 'src/vendor/doctrine-migrations',
-    'git://github.com/doctrine/mongodb-odm.git'             => 'src/vendor/doctrine-mongodb',
+    'git://github.com/doctrine/mongodb.git'                 => 'src/vendor/doctrine-mongodb',
+    'git://github.com/doctrine/mongodb-odm.git'             => 'src/vendor/doctrine-mongodb-odm',
   );
   
   $git_repository = array_merge($git_repository, $git_db_repository);
