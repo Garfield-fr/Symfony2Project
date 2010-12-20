@@ -392,6 +392,7 @@ $loader_array = array(
 );
 
 $loader_db_array = array(
+  'Doctrine\\\\MongoDB' => '$vendorDir.\'/doctrine-mongodb/lib\'',
   'Doctrine\\\\ODM\\\\MongoDB' => '$vendorDir.\'/doctrine-mongodb-odm/lib\'',
   'Doctrine\\\\Common\\\\DataFixtures' => '$vendorDir.\'/doctrine-data-fixtures/lib\'',
   'Doctrine\\\\Common' => '$vendorDir.\'/doctrine-common/lib\'',
