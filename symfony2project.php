@@ -684,7 +684,7 @@ foreach ($git_repository as $source => $target)
 
 exec('git submodule init');
 exec('git submodule update');
-exec('app/console assets:install --symlink web');
+exec('php app/console assets:install --symlink web');
 
 @remove('app/cache/dev');
 @unlink('app/logs/dev.log');
