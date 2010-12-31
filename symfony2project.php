@@ -198,7 +198,8 @@ $config_db_yml = <<<'EOF'
 #    user:     xxxxxxxx
 #    password: ~
 #doctrine.orm: ~
-
+#    mappings:
+#        %app%Bundle: ~
 
 EOF;
 
@@ -600,6 +601,7 @@ $config_yml = str_replace('%start%', $session_autostart, $config_yml);
 $config_yml = str_replace('%sessionname%', $session_name, $config_yml);
 if ($with_db)
 {
+  $config_db_yml = str_replace('%app%', $app, $config_db_yml);
   $config_yml = str_replace('%configdb%', $config_db_yml, $config_yml);
 }
 else
