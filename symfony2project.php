@@ -197,7 +197,8 @@ $config_db_yml = <<<'EOF'
 #    dbname:   xxxxxxxx
 #    user:     xxxxxxxx
 #    password: ~
-#doctrine.orm: ~
+#doctrine.orm:
+#    auto_generate_proxy_classes: %kernel.debug%
 #    mappings:
 #        %app%Bundle: ~
 
