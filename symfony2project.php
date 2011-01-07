@@ -287,8 +287,9 @@ $loader->registerNamespaces(array(
 %loader%
 ));
 $loader->registerPrefixes(array(
-    'Swift_' => $vendorDir.'/swiftmailer/lib/classes',
-    'Twig_'  => $vendorDir.'/twig/lib',
+    'Swift_'           => $vendorDir.'/swiftmailer/lib/classes',
+    'Twig_'            => $vendorDir.'/twig/lib',
+    'Twig_Extensions_' => $vendorDir.'/twig-extensions/lib',
 ));
 $loader->register();
 EOF;
@@ -656,6 +657,7 @@ $git_repository = array(
   'git://github.com/'.$repository.'/symfony.git'          => 'src/vendor/symfony',
   'git://github.com/swiftmailer/swiftmailer.git'          => 'src/vendor/swiftmailer',
   'git://github.com/fabpot/Twig.git'                      => 'src/vendor/twig',
+  'git://github.com/fabpot/Twig-extensions.git'           => 'src/vendor/twig-extensions',
   'git://github.com/zendframework/zf2.git'                => 'src/vendor/zend',
 );
 
