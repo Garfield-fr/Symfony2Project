@@ -18,6 +18,3 @@
     --with-db:           : false or true (default: true)
 
 *Note: only tested on unix system.*
-
-2010, Bertrand Zuchuat
-
