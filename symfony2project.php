@@ -136,6 +136,12 @@ $app_phpunit = <<<'EOF'
       </testsuite>
   </testsuites>
 
+  <!--
+  <php>
+      <server name="KERNEL_DIR" value="/path/to/your/app/" />
+  </php>
+  //-->
+
   <filter>
       <whitelist>
           <directory>../src/Application</directory>
