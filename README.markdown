@@ -15,6 +15,6 @@
     --session-start      : false or true (auto_start parameter on session) (default: false)
     --session-name       : Session name (default: Application name)
     --symfony-repository : fabpot or symfony (default: symfony)
-    --with-db:           : false or true (default: true)
+    --with-db            : false or true (default: true)
 
 *Note: only tested on unix system.*
