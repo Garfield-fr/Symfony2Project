@@ -368,13 +368,13 @@ class %controller%Controller extends Controller
 {
     public function indexAction()
     {
-        return $this->render('%app%Bundle:%controller%:index.twig');
+        return $this->render('%app%Bundle:%controller%:index.twig.html');
     }
 }
 EOF;
 
 $controller_template = <<<'EOF'
-{% extends "::layout.twig" %}
+{% extends "::layout.twig.html" %}
 
 {% block content %}
 Controller: %controller%<br />
@@ -623,8 +623,8 @@ file_put_contents('app/config/config_prod.yml', $config_prod_yml);
 $routing_yml = ($with_controller ? $routing_with_controller_yml : $routing_yml);
 file_put_contents('app/config/routing.yml', str_replace('%app%', $app, $routing_yml));
 file_put_contents('app/config/routing_dev.yml', $routing_dev_yml);
-file_put_contents('app/views/layout.php', str_replace('%app%', $app, $layout_php));
-file_put_contents('app/views/layout.twig', str_replace('%app%', $app, $layout_twig));
+file_put_contents('app/views/layout.php.html', str_replace('%app%', $app, $layout_php));
+file_put_contents('app/views/layout.twig.html', str_replace('%app%', $app, $layout_twig));
 
 file_put_contents('src/autoload.php', str_replace('%loader%', $loader_string, $autoload));
 
@@ -639,7 +639,7 @@ if ($with_controller)
 
   $ftpath = "$app_folder/Resources/views/$controller";
   mkdir($ftpath);
-  file_put_contents($ftpath.'/index.twig', str_replace('%controller%', $controller, $controller_template));
+  file_put_contents($ftpath.'/index.twig.html', str_replace('%controller%', $controller, $controller_template));
 
   file_put_contents($app_folder.'/Resources/config/routing.yml', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_routing));
 }
