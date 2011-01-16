@@ -374,7 +374,7 @@ class %controller%Controller extends Controller
 EOF;
 
 $controller_template = <<<'EOF'
-{% extends "::layout.twig.html" %}
+{% extends "::base.twig.html" %}
 
 {% block content %}
 Controller: %controller%<br />
@@ -623,8 +623,8 @@ file_put_contents('app/config/config_prod.yml', $config_prod_yml);
 $routing_yml = ($with_controller ? $routing_with_controller_yml : $routing_yml);
 file_put_contents('app/config/routing.yml', str_replace('%app%', $app, $routing_yml));
 file_put_contents('app/config/routing_dev.yml', $routing_dev_yml);
-file_put_contents('app/views/layout.php.html', str_replace('%app%', $app, $layout_php));
-file_put_contents('app/views/layout.twig.html', str_replace('%app%', $app, $layout_twig));
+file_put_contents('app/views/base.php.html', str_replace('%app%', $app, $layout_php));
+file_put_contents('app/views/base.twig.html', str_replace('%app%', $app, $layout_twig));
 
 file_put_contents('src/autoload.php', str_replace('%loader%', $loader_string, $autoload));
 
