@@ -263,7 +263,7 @@ homepage:
     defaults: { _controller: FrameworkBundle:Default:index }
 
 #%app%:
-#    resource: %app%Bundle/Resources/config/routing.yml
+#    resource: @%app%Bundle/Resources/config/routing.yml
 EOF;
 
 $routing_with_controller_yml = <<<'EOF'
@@ -272,7 +272,7 @@ homepage:
     defaults: { _controller: FrameworkBundle:Default:index }
 
 %app%:
-    resource: %app%Bundle/Resources/config/routing.yml
+    resource: @%app%Bundle/Resources/config/routing.yml
 EOF;
 
 
@@ -281,7 +281,7 @@ _main:
     resource: routing.yml
 
 _profiler:
-    resource: WebProfilerBundle/Resources/config/routing/profiler.xml
+    resource: @WebProfilerBundle/Resources/config/routing/profiler.xml
     prefix:   /_profiler
 EOF;
 
@@ -374,13 +374,13 @@ class %controller%Controller extends Controller
 {
     public function indexAction()
     {
-        return $this->render('%app%Bundle:%controller%:index.twig.html');
+        return $this->render('%app%Bundle:%controller%:index.html.twig');
     }
 }
 EOF;
 
 $controller_template = <<<'EOF'
-{% extends "::base.twig.html" %}
+{% extends "::base.html.twig" %}
 
 {% block content %}
 Controller: %controller%<br />
@@ -630,7 +630,7 @@ $routing_yml = ($with_controller ? $routing_with_controller_yml : $routing_yml);
 file_put_contents('app/config/routing.yml', str_replace('%app%', $app, $routing_yml));
 file_put_contents('app/config/routing_dev.yml', $routing_dev_yml);
 file_put_contents('app/views/base.php.html', str_replace('%app%', $app, $layout_php));
-file_put_contents('app/views/base.twig.html', str_replace('%app%', $app, $layout_twig));
+file_put_contents('app/views/base.html.twig', str_replace('%app%', $app, $layout_twig));
 
 file_put_contents('src/autoload.php', str_replace('%loader%', $loader_string, $autoload));
 
@@ -645,7 +645,7 @@ if ($with_controller)
 
   $ftpath = "$app_folder/Resources/views/$controller";
   mkdir($ftpath);
-  file_put_contents($ftpath.'/index.twig.html', str_replace('%controller%', $controller, $controller_template));
+  file_put_contents($ftpath.'/index.html.twig', str_replace('%controller%', $controller, $controller_template));
 
   file_put_contents($app_folder.'/Resources/config/routing.yml', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_routing));
 }
