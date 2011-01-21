@@ -77,15 +77,6 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
-    public function registerBundleDirs()
-    {
-        return array(
-            'Application'     => __DIR__.'/../src/Application',
-            'Bundle'          => __DIR__.'/../src/Bundle',
-            'Symfony\\Bundle' => __DIR__.'/../src/vendor/symfony/src/Symfony/Bundle',
-        );
-    }
-
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         // use YAML for configuration
@@ -164,6 +155,21 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class %app%Bundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getNamespace()
+    {
+        return __NAMESPACE__;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPath()
+    {
+        return strtr(__DIR__, '\\', '/');
+    }
 }
 EOF;
 
