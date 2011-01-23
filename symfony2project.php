@@ -178,7 +178,9 @@ $config_yml = <<<'EOF'
 app.config:
     charset:       UTF-8
     error_handler: null
-    csrf_secret:   xxxxxxxxxx
+    csrf_secret:
+        enabled: true
+        secret: xxxxxxxxxx
     router:        { resource: "%kernel.root_dir%/config/routing.yml" }
     validation:    { enabled: true, annotations: true }
     templating:
