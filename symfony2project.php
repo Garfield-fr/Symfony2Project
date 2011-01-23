@@ -52,11 +52,6 @@ use Symfony\Component\DependencyInjection\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
-    public function registerRootDir()
-    {
-        return __DIR__;
-    }
-
     public function registerBundles()
     {
         $bundles = array(
@@ -75,6 +70,11 @@ class AppKernel extends Kernel
         }
 
         return $bundles;
+    }
+
+    public function registerRootDir()
+    {
+        return __DIR__;
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
