@@ -3,7 +3,7 @@
 
 ##Usage
  
-    php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true]
+    php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true] [--template-engine=twig|php]
 
 ###Arguments
 
@@ -16,5 +16,6 @@
     --session-name       : Session name (default: Application name)
     --symfony-repository : fabpot or symfony (default: symfony)
     --with-db            : false or true (default: true)
+    --template-engine    : twig or php (default: twig)
 
 *Note: only tested on unix system.*

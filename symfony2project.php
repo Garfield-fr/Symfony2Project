@@ -181,7 +181,9 @@ app.config:
     csrf_secret:   xxxxxxxxxx
     router:        { resource: "%kernel.root_dir%/config/routing.yml" }
     validation:    { enabled: true, annotations: true }
-    templating:    {} #assets_version: SomeVersionScheme
+    templating:
+        engines:   ['%engine%']
+        #assets_version: SomeVersionScheme
     session:
         default_locale: en
         lifetime:       3600
@@ -447,7 +449,7 @@ if (0 == count($argv))
 {
   echo <<<'EOF'
 
-Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true]
+Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http][--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true][----template-engine=twig|php]
 
 --app                : Application name (mandatory)
 --path               : Directory name (path) (default: current dir)
@@ -458,6 +460,7 @@ Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--
 --session-name       : Session name (default: Application name)
 --symfony-repository : fabpot or symfony (default: symfony)
 --with-db            : false or true (default: true)
+--template-engine    : twig or php (default: twig)
 
 
 EOF;
@@ -512,7 +515,7 @@ $repositories = array('fabpot', 'symfony');
 $repository = "symfony";
 if($repo = @$params['symfony-repository'])
 {
-    if(in_array($repository, $repositories)){
+    if(in_array($repo, $repositories)){
         $repository = $repo;
     }
 }
@@ -522,6 +525,16 @@ $with_db = ((!@$params['with-db']) || ('true' === @$params['with-db'])) ? true :
 if ($with_db)
 {
   $loader_array = array_merge($loader_array, $loader_db_array);
+}
+
+$template_engine = array('twig', 'php');
+$engine = 'twig';
+if($template = @$params['template-engine'])
+{
+    if (in_array($template, $template_engine))
+    {
+        $engine = $template;
+    }
 }
 
 $loader_key_size = 0;
@@ -611,8 +624,9 @@ file_put_contents('web/.htaccess', $web_htaccess);
 file_put_contents('web/robots.txt', $web_robots);
 
 $config_yml = str_replace('%start%', $session_autostart, $config_yml);
-
 $config_yml = str_replace('%sessionname%', $session_name, $config_yml);
+$config_yml = str_replace('%engine%', $engine, $config_yml);
+
 if ($with_db)
 {
   $config_db_yml = str_replace('%app%', $app, $config_db_yml);
