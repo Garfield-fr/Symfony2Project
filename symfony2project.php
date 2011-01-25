@@ -213,6 +213,7 @@ $config_db_yml = <<<'EOF'
 #    dbname:   xxxxxxxx
 #    user:     xxxxxxxx
 #    password: ~
+#    logging:  %kernel.debug%
 #doctrine.orm:
 #    auto_generate_proxy_classes: %kernel.debug%
 #    mappings:
