@@ -35,7 +35,7 @@ $app_cache = <<<'EOF'
 
 require_once __DIR__.'/AppKernel.php';
 
-use Symfony\Framework\Cache\Cache;
+use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 
 class AppCache extends Cache
 {
@@ -311,31 +311,27 @@ $loader->registerPrefixes(array(
 $loader->register();
 EOF;
 
-$layout_php = <<<'EOF'
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title><?php $view['slots']->output('title', '%app% Application') ?></title>
-    </head>
-    <body>
-        <?php $view['slots']->output('_content') ?>
-    </body>
-</html>
-EOF;
-
-
-$layout_twig = <<<'EOF'
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+$base_twig = <<<'EOF'
+<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>{% block title %}%app% Application{% endblock %}</title>
     </head>
     <body>
-        {% block content %}{% endblock %}
+        {% block body %}{% endblock %}
     </body>
 </html>
+EOF;
+
+$layout_twig = <<<'EOF'
+{% extends "::base.html.twig" %}
+
+{% block body %}
+    <h1>%app% Application</h1>
+
+    {% block content %}{% endblock %}
+{% endblock %}
 EOF;
 
 
@@ -385,7 +381,7 @@ class %controller%Controller extends Controller
 EOF;
 
 $controller_template = <<<'EOF'
-{% extends "::base.html.twig" %}
+{% extends "%app%Bundle::layout.html.twig" %}
 
 {% block content %}
 Controller: %controller%<br />
@@ -452,7 +448,7 @@ if (0 == count($argv))
 {
   echo <<<'EOF'
 
-Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true] [----template-engine=twig|php]
+Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true] [--template-engine=twig|php]
 
 --app                : Application name (mandatory)
 --path               : Directory name (path) (default: current dir)
@@ -646,8 +642,7 @@ file_put_contents('app/config/config_prod.yml', $config_prod_yml);
 $routing_yml = ($with_controller ? $routing_with_controller_yml : $routing_yml);
 file_put_contents('app/config/routing.yml', str_replace('%app%', $app, $routing_yml));
 file_put_contents('app/config/routing_dev.yml', $routing_dev_yml);
-file_put_contents('app/views/base.php.html', str_replace('%app%', $app, $layout_php));
-file_put_contents('app/views/base.html.twig', str_replace('%app%', $app, $layout_twig));
+file_put_contents('app/views/base.html.twig', str_replace('%app%', $app, $base_twig));
 
 file_put_contents('src/autoload.php', str_replace('%loader%', $loader_string, $autoload));
 
@@ -657,12 +652,14 @@ file_put_contents('web/index_dev.php', $index_dev);
 
 if ($with_controller)
 {
+  file_put_contents("$app_folder/Resources/views/layout.html.twig", str_replace('%app%', $app, $layout_twig));
+  
   $cpath = "$app_folder/Controller/".$controller."Controller.php";
   file_put_contents($cpath, str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_bundle));
 
   $ftpath = "$app_folder/Resources/views/$controller";
   mkdir($ftpath);
-  file_put_contents($ftpath.'/index.html.twig', str_replace('%controller%', $controller, $controller_template));
+  file_put_contents($ftpath.'/index.html.twig', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_template));
 
   file_put_contents($app_folder.'/Resources/config/routing.yml', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_routing));
 }
