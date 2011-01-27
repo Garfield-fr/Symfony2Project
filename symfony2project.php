@@ -295,7 +295,7 @@ $autoload = <<<'EOF'
 
 $vendorDir = __DIR__.'/vendor';
 
-require_once $vendorDir.'/symfony/src/Symfony/Component/HttpFoundation/UniversalClassLoader.php';
+require_once $vendorDir.'/symfony/src/Symfony/Component/HttpKernel/UniversalClassLoader.php';
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
