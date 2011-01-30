@@ -45,8 +45,6 @@ EOF;
 $app_kernel = <<<'EOF'
 <?php
 
-require_once __DIR__.'/../src/autoload.php';
-
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\DependencyInjection\Loader\LoaderInterface;
 
@@ -92,10 +90,18 @@ class AppKernel extends Kernel
 }
 EOF;
 
+$app_boostrap = <<<'EOF'
+<?php
+
+require_once __DIR__.'/../src/vendor/symfony/src/Symfony/Component/HttpKernel/bootstrap.php';
+require_once __DIR__.'/autoload.php';
+EOF;
+
 $app_console = <<<'EOF'
 #!/usr/bin/env php
 <?php
 
+require_once __DIR__.'/bootstrap.php';
 require_once __DIR__.'/AppKernel.php';
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -119,7 +125,7 @@ $app_phpunit = <<<'EOF'
          processIsolation="true"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="../src/autoload.php"
+         bootstrap="bootstrap.php"
 >
   <testsuites>
       <testsuite name="Project Test Suite">
@@ -293,9 +299,7 @@ EOF;
 $autoload = <<<'EOF'
 <?php
 
-$vendorDir = __DIR__.'/vendor';
-
-require_once $vendorDir.'/symfony/src/Symfony/Component/HttpKernel/bootstrap.php';
+$vendorDir = __DIR__.'/../src/vendor';
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
@@ -338,6 +342,7 @@ EOF;
 $index_prod = <<<'EOF'
 <?php
 
+require_once __DIR__.'/../app/bootstrap.php';
 require_once __DIR__.'/../app/AppKernel.php';
 
 use Symfony\Component\HttpFoundation\Request;
@@ -355,6 +360,7 @@ if (!in_array(@$_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
     die('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
 }
 
+require_once __DIR__.'/../app/bootstrap.php';
 require_once __DIR__.'/../app/AppKernel.php';
 
 use Symfony\Component\HttpFoundation\Request;
@@ -402,8 +408,8 @@ EOF;
 
 $loader_array = array(
   'Symfony' => '$vendorDir.\'/symfony/src\'',
-  'Application' => '__DIR__',
-  'Bundle' => '__DIR__',
+  'Application' => '__DIR__.\'/../src\'',
+  'Bundle' => '__DIR__.\'/../src\'',
   'Zend' => '$vendorDir.\'/zend/library\''
 );
 
@@ -614,6 +620,7 @@ else
 {
   $app_kernel = str_replace('%class%', '', $app_kernel);
 }
+file_put_contents('app/bootstrap.php', $app_boostrap);
 file_put_contents('app/AppKernel.php', $app_kernel);
 file_put_contents('app/console', $app_console);
 file_put_contents('app/phpunit.xml', $app_phpunit);
@@ -644,7 +651,7 @@ file_put_contents('app/config/routing.yml', str_replace('%app%', $app, $routing_
 file_put_contents('app/config/routing_dev.yml', $routing_dev_yml);
 file_put_contents('app/views/base.html.twig', str_replace('%app%', $app, $base_twig));
 
-file_put_contents('src/autoload.php', str_replace('%loader%', $loader_string, $autoload));
+file_put_contents('app/autoload.php', str_replace('%loader%', $loader_string, $autoload));
 
 file_put_contents($app_folder.'/'.$app.'Bundle.php', str_replace('%app%', $app, $app_bundle));
 file_put_contents('web/index.php', $index_prod);
