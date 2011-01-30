@@ -328,6 +328,20 @@ $base_twig = <<<'EOF'
 </html>
 EOF;
 
+$base_php = <<<'EOF'
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title><?php $view['slots']->output('title', '%app% Application') ?></title>
+    </head>
+    <body>
+        <?php $view['slots']->output('_content') ?>
+    </body>
+</html>
+
+EOF;
+
 $layout_twig = <<<'EOF'
 {% extends "::base.html.twig" %}
 
@@ -336,6 +350,15 @@ $layout_twig = <<<'EOF'
 
     {% block content %}{% endblock %}
 {% endblock %}
+EOF;
+
+$layout_php = <<<'EOF'
+<?php $view->extend('::base.html.php') ?>
+
+<h1>%app% Application</h1>
+
+<?php $view['slots']->output('_content') ?>
+
 EOF;
 
 
@@ -381,18 +404,25 @@ class %controller%Controller extends Controller
 {
     public function indexAction()
     {
-        return $this->render('%app%Bundle:%controller%:index.html.twig');
+        return $this->render('%app%Bundle:%controller%:index.html.%engine%');
     }
 }
 EOF;
 
-$controller_template = <<<'EOF'
+$controller_template_twig = <<<'EOF'
 {% extends "%app%Bundle::layout.html.twig" %}
 
 {% block content %}
 Controller: %controller%<br />
 Action: index
 {% endblock %}
+EOF;
+
+$controller_template_php = <<<'EOF'
+<?php $view->extend('%app%Bundle::layout.html.php') ?>
+
+Controller: %controller%<br />
+Action: index
 EOF;
 
 $controller_routing = <<<'EOF'
@@ -649,7 +679,13 @@ file_put_contents('app/config/config_prod.yml', $config_prod_yml);
 $routing_yml = ($with_controller ? $routing_with_controller_yml : $routing_yml);
 file_put_contents('app/config/routing.yml', str_replace('%app%', $app, $routing_yml));
 file_put_contents('app/config/routing_dev.yml', $routing_dev_yml);
-file_put_contents('app/views/base.html.twig', str_replace('%app%', $app, $base_twig));
+
+if ('twig' === $engine) {
+  file_put_contents('app/views/base.html.twig', str_replace('%app%', $app, $base_twig));
+} else {
+  file_put_contents('app/views/base.html.php', str_replace('%app%', $app, $base_php));
+}
+
 
 file_put_contents('app/autoload.php', str_replace('%loader%', $loader_string, $autoload));
 
@@ -659,14 +695,22 @@ file_put_contents('web/index_dev.php', $index_dev);
 
 if ($with_controller)
 {
-  file_put_contents("$app_folder/Resources/views/layout.html.twig", str_replace('%app%', $app, $layout_twig));
+  if ('twig' === $engine) {
+    file_put_contents("$app_folder/Resources/views/layout.html.twig", str_replace('%app%', $app, $layout_twig));
+  } else {
+    file_put_contents("$app_folder/Resources/views/layout.html.php", str_replace('%app%', $app, $layout_php));
+  }
   
   $cpath = "$app_folder/Controller/".$controller."Controller.php";
-  file_put_contents($cpath, str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_bundle));
+  file_put_contents($cpath, str_replace(array('%app%', '%controller%', '%engine%'), array($app, $controller, $engine), $controller_bundle));
 
   $ftpath = "$app_folder/Resources/views/$controller";
   mkdir($ftpath);
-  file_put_contents($ftpath.'/index.html.twig', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_template));
+  if ('twig' === $engine) {
+    file_put_contents($ftpath.'/index.html.twig', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_template_twig));
+  } else {
+    file_put_contents($ftpath.'/index.html.php', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_template_php));
+  }
 
   file_put_contents($app_folder.'/Resources/config/routing.yml', str_replace(array('%app%', '%controller%'), array($app, $controller), $controller_routing));
 }
