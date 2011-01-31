@@ -93,7 +93,7 @@ EOF;
 $app_boostrap = <<<'EOF'
 <?php
 
-require_once __DIR__.'/../src/vendor/symfony/src/Symfony/Component/HttpKernel/bootstrap.php';
+require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/HttpKernel/bootstrap.php';
 require_once __DIR__.'/autoload.php';
 EOF;
 
@@ -314,7 +314,7 @@ EOF;
 $autoload = <<<'EOF'
 <?php
 
-$vendorDir = __DIR__.'/../src/vendor';
+$vendorDir = __DIR__.'/../vendor';
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
@@ -641,7 +641,7 @@ $folders = array(
   'src',
   'src/'.$vendor,
   'src/Bundle',
-  'src/vendor',
+  'vendor',
   'web',
   'web/bundles'
 );
@@ -762,23 +762,23 @@ exec('git init');
 echo "\n";
 
 $git_repository = array(
-  'git://github.com/'.$repository.'/symfony.git'          => 'src/vendor/symfony',
-  'git://github.com/swiftmailer/swiftmailer.git'          => 'src/vendor/swiftmailer',
-  'git://github.com/fabpot/Twig.git'                      => 'src/vendor/twig',
-  'git://github.com/fabpot/Twig-extensions.git'           => 'src/vendor/twig-extensions',
-  'git://github.com/zendframework/zf2.git'                => 'src/vendor/zend',
+  'git://github.com/'.$repository.'/symfony.git'          => 'vendor/symfony',
+  'git://github.com/swiftmailer/swiftmailer.git'          => 'vendor/swiftmailer',
+  'git://github.com/fabpot/Twig.git'                      => 'vendor/twig',
+  'git://github.com/fabpot/Twig-extensions.git'           => 'vendor/twig-extensions',
+  'git://github.com/zendframework/zf2.git'                => 'vendor/zend',
 );
 
 if ($with_db)
 {
   $git_db_repository = array(
-    'git://github.com/doctrine/doctrine2.git'               => 'src/vendor/doctrine',
-    'git://github.com/doctrine/data-fixtures.git'           => 'src/vendor/doctrine-data-fixtures',
-    'git://github.com/doctrine/dbal.git'                    => 'src/vendor/doctrine-dbal',
-    'git://github.com/doctrine/common.git'                  => 'src/vendor/doctrine-common',
-    'git://github.com/doctrine/migrations.git'              => 'src/vendor/doctrine-migrations',
-    'git://github.com/doctrine/mongodb.git'                 => 'src/vendor/doctrine-mongodb',
-    'git://github.com/doctrine/mongodb-odm.git'             => 'src/vendor/doctrine-mongodb-odm',
+    'git://github.com/doctrine/doctrine2.git'               => 'vendor/doctrine',
+    'git://github.com/doctrine/data-fixtures.git'           => 'vendor/doctrine-data-fixtures',
+    'git://github.com/doctrine/dbal.git'                    => 'vendor/doctrine-dbal',
+    'git://github.com/doctrine/common.git'                  => 'vendor/doctrine-common',
+    'git://github.com/doctrine/migrations.git'              => 'vendor/doctrine-migrations',
+    'git://github.com/doctrine/mongodb.git'                 => 'vendor/doctrine-mongodb',
+    'git://github.com/doctrine/mongodb-odm.git'             => 'vendor/doctrine-mongodb-odm',
   );
   
   $git_repository = array_merge($git_repository, $git_db_repository);
