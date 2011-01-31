@@ -8,6 +8,7 @@
 ###Arguments
 
     --app                : application name (mandatory)
+    --vendor             : vendor name (mandatory)
     --path               : directory name (path) (default: current dir)
     --controller         : your first controller name (optional)
                            (suggestion: home or main, you can change it later if you change your mind)
