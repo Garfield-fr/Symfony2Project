@@ -60,7 +60,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\ZendBundle\ZendBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
 %class%
-            new Application\%app%Bundle\%app%Bundle(),
+            new %vendor%\%app%Bundle\%app%Bundle(),
         );
 
         if ($this->isDebug()) {
@@ -97,7 +97,22 @@ require_once __DIR__.'/../src/vendor/symfony/src/Symfony/Component/HttpKernel/bo
 require_once __DIR__.'/autoload.php';
 EOF;
 
-$app_console = <<<'EOF'
+$app_console_prod = <<<'EOF'
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__.'/bootstrap.php';
+require_once __DIR__.'/AppKernel.php';
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+$kernel = new AppKernel('prod', false);
+
+$application = new Application($kernel);
+$application->run();
+EOF;
+
+$app_console_dev = <<<'EOF'
 #!/usr/bin/env php
 <?php
 
@@ -141,10 +156,10 @@ $app_phpunit = <<<'EOF'
 
   <filter>
       <whitelist>
-          <directory>../src/Application</directory>
+          <directory>../src</directory>
           <exclude>
-              <directory>../src/Application/*/Resources</directory>
-              <directory>../src/Application/*/Tests</directory>
+              <directory>../src/*/*Bundle/Resources</directory>
+              <directory>../src/*/*Bundle/Tests</directory>
           </exclude>
       </whitelist>
   </filter>
@@ -155,7 +170,7 @@ EOF;
 
 $app_bundle = <<<'EOF'
 <?php
-namespace Application\%app%Bundle;
+namespace %vendor%\%app%Bundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -396,7 +411,7 @@ EOF;
 $controller_bundle = <<<'EOF'
 <?php
 
-namespace Application\%app%Bundle\Controller;
+namespace %vendor%\%app%Bundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -438,7 +453,7 @@ EOF;
 
 $loader_array = array(
   'Symfony' => '$vendorDir.\'/symfony/src\'',
-  'Application' => '__DIR__.\'/../src\'',
+  '%vendor%' => '__DIR__.\'/../src\'',
   'Bundle' => '__DIR__.\'/../src\'',
   'Zend' => '$vendorDir.\'/zend/library\''
 );
@@ -460,21 +475,6 @@ $kernel_class = <<<'EOF'
 
 EOF;
 
-// ----------------- STRUCTURE
-$folders = array(
-  'app',
-  'app/cache',
-  'app/config',
-  'app/logs',
-  'app/views',
-  'src',
-  'src/Application',
-  'src/Bundle',
-  'src/vendor',
-  'web',
-  'web/bundles'
-);
-
 // ----------------- MAIN
 
 // Delete the first array position (scriptname)
@@ -484,9 +484,10 @@ if (0 == count($argv))
 {
   echo <<<'EOF'
 
-Usage: php symfony2project.php --app=AppName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true] [--template-engine=twig|php]
+Usage: php symfony2project.php --app=AppName --vendor=VendorName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true] [--template-engine=twig|php]
 
 --app                : Application name (mandatory)
+--vendor             : Vendor name (mandatory)
 --path               : Directory name (path) (default: current dir)
 --controller         : Your first controller name (optional)
                        (suggestion: home or main, you can change it later if you change your mind)
@@ -516,6 +517,13 @@ if (!$app = @$params['app'])
   echo "Application name is mandatory\n";
   exit;
 }
+
+if (!$vendor = @$params['vendor'])
+{
+  echo "Vendor name is mandatory\n";
+  exit;
+}
+
 
 if (!$dir = @$params['path'])
 {
@@ -560,6 +568,13 @@ $with_db = ((!@$params['with-db']) || ('true' === @$params['with-db'])) ? true :
 if ($with_db)
 {
   $loader_array = array_merge($loader_array, $loader_db_array);
+  $loader_transform = array();
+  foreach ($loader_array as $key => $value)
+  {
+      $key = str_replace('%vendor%', $vendor, $key);
+      $loader_transform[$key] = str_replace('%vendor%', $vendor, $value);
+  }
+  $loader_array = $loader_transform;
 }
 
 $template_engine = array('twig', 'php');
@@ -616,14 +631,29 @@ if (!$test)
   exit;
 }
 
+// ----------------- STRUCTURE
+$folders = array(
+  'app',
+  'app/cache',
+  'app/config',
+  'app/logs',
+  'app/views',
+  'src',
+  'src/'.$vendor,
+  'src/Bundle',
+  'src/vendor',
+  'web',
+  'web/bundles'
+);
+
 // Start Install
 echo "\n";
 echo "-> Install to $dir\n";
 
 chdir($dir);
 
-$app_folder = 'src/Application/'.$app.'Bundle';
-
+$app_folder = 'src/'.$vendor.'/'.$app.'Bundle';
+mkdir($app_folder);
 array_push($folders, $app_folder,
   "$app_folder/Controller",
   "$app_folder/Resources",
@@ -641,7 +671,7 @@ foreach ($folders as $folder)
 
 file_put_contents('app/AppCache.php', $app_cache);
 
-$app_kernel = str_replace('%app%', $app, $app_kernel);
+$app_kernel = str_replace(array('%app%', '%vendor%'), array($app, $vendor), $app_kernel);
 if ($with_db)
 {
   $app_kernel = str_replace('%class%', $kernel_class, $app_kernel);
@@ -652,7 +682,8 @@ else
 }
 file_put_contents('app/bootstrap.php', $app_boostrap);
 file_put_contents('app/AppKernel.php', $app_kernel);
-file_put_contents('app/console', $app_console);
+file_put_contents('app/console', $app_console_prod);
+file_put_contents('app/console_dev', $app_console_dev);
 file_put_contents('app/phpunit.xml', $app_phpunit);
 file_put_contents('app/.htaccess', $deny_htaccess);
 file_put_contents('src/.htaccess', $deny_htaccess);
@@ -689,7 +720,7 @@ if ('twig' === $engine) {
 
 file_put_contents('app/autoload.php', str_replace('%loader%', $loader_string, $autoload));
 
-file_put_contents($app_folder.'/'.$app.'Bundle.php', str_replace('%app%', $app, $app_bundle));
+file_put_contents($app_folder.'/'.$app.'Bundle.php', str_replace(array('%app%', '%vendor%'), array($app, $vendor), $app_bundle));
 file_put_contents('web/index.php', $index_prod);
 file_put_contents('web/index_dev.php', $index_dev);
 
@@ -702,7 +733,7 @@ if ($with_controller)
   }
   
   $cpath = "$app_folder/Controller/".$controller."Controller.php";
-  file_put_contents($cpath, str_replace(array('%app%', '%controller%', '%engine%'), array($app, $controller, $engine), $controller_bundle));
+  file_put_contents($cpath, str_replace(array('%app%', '%controller%', '%engine%', '%vendor%'), array($app, $controller, $engine, $vendor), $controller_bundle));
 
   $ftpath = "$app_folder/Resources/views/$controller";
   mkdir($ftpath);
