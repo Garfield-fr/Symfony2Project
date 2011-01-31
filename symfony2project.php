@@ -454,7 +454,6 @@ EOF;
 $loader_array = array(
   'Symfony' => '$vendorDir.\'/symfony/src\'',
   '%vendor%' => '__DIR__.\'/../src\'',
-  'Bundle' => '__DIR__.\'/../src\'',
   'Zend' => '$vendorDir.\'/zend/library\''
 );
 
@@ -640,7 +639,6 @@ $folders = array(
   'app/views',
   'src',
   'src/'.$vendor,
-  'src/Bundle',
   'vendor',
   'web',
   'web/bundles'
