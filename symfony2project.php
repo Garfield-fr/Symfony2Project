@@ -323,9 +323,9 @@ $loader->registerNamespaces(array(
 %loader%
 ));
 $loader->registerPrefixes(array(
-    'Swift_'           => $vendorDir.'/swiftmailer/lib/classes',
     'Twig_Extensions_' => $vendorDir.'/twig-extensions/lib',
     'Twig_'            => $vendorDir.'/twig/lib',
+    'Swift_'           => $vendorDir.'/swiftmailer/lib/classes',
 ));
 $loader->register();
 EOF;
