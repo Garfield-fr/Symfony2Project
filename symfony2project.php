@@ -63,7 +63,7 @@ class AppKernel extends Kernel
             new %vendor%\%app%Bundle\%app%Bundle(),
         );
 
-        if ($this->isDebug()) {
+        if ('dev' === $this->getEnvironment()) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
         }
 
@@ -97,7 +97,7 @@ require_once __DIR__.'/../vendor/symfony/src/Symfony/Component/HttpKernel/bootst
 require_once __DIR__.'/autoload.php';
 EOF;
 
-$app_console_prod = <<<'EOF'
+$app_console = <<<'EOF'
 #!/usr/bin/env php
 <?php
 
@@ -105,28 +105,17 @@ require_once __DIR__.'/bootstrap.php';
 require_once __DIR__.'/AppKernel.php';
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
 
-$kernel = new AppKernel('prod', false);
+$input = new ArgvInput();
+$env = $input->getParameterOption(array('--env', '-e'), 'dev');
+$debug = $input->hasParameterOption(array('--debug', '-d'));
 
+$kernel = new AppKernel($env, $debug);
 $application = new Application($kernel);
 $application->run();
+
 EOF;
-
-$app_console_dev = <<<'EOF'
-#!/usr/bin/env php
-<?php
-
-require_once __DIR__.'/bootstrap.php';
-require_once __DIR__.'/AppKernel.php';
-
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-
-$kernel = new AppKernel('dev', true);
-
-$application = new Application($kernel);
-$application->run();
-EOF;
-
 
 $app_phpunit = <<<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -665,8 +654,7 @@ else
 }
 file_put_contents('app/bootstrap.php', $app_boostrap);
 file_put_contents('app/AppKernel.php', $app_kernel);
-file_put_contents('app/console', $app_console_prod);
-file_put_contents('app/console_dev', $app_console_dev);
+file_put_contents('app/console', $app_console);
 file_put_contents('app/phpunit.xml', $app_phpunit);
 file_put_contents('app/.htaccess', $deny_htaccess);
 file_put_contents('src/.htaccess', $deny_htaccess);
