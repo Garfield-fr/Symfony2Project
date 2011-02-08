@@ -632,7 +632,7 @@ array_push($folders, $app_folder,
   "$app_folder/Resources/config",
   "$app_folder/Resources/public",
   "$app_folder/Resources/views",
-  "$app_folder/Test"
+  "$app_folder/Tests"
 );
 
 foreach ($folders as $folder)
