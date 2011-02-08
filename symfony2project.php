@@ -133,7 +133,7 @@ $app_phpunit = <<<'EOF'
 >
   <testsuites>
       <testsuite name="Project Test Suite">
-          <directory>../src/Application/*/Tests</directory>
+          <directory>../src/*/*Bundle/Tests</directory>
       </testsuite>
   </testsuites>
 
