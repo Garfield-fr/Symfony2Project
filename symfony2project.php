@@ -63,7 +63,7 @@ class AppKernel extends Kernel
             new %vendor%\%app%Bundle\%app%Bundle(),
         );
 
-        if ('dev' === $this->getEnvironment()) {
+        if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
         }
 
@@ -677,6 +677,7 @@ else
 
 file_put_contents('app/config/config.yml', $config_yml);
 file_put_contents('app/config/config_dev.yml', $config_dev_yml);
+file_put_contents('app/config/config_test.yml', $config_test_yml);
 file_put_contents('app/config/config_prod.yml', $config_prod_yml);
 $routing_yml = ($with_controller ? $routing_with_controller_yml : $routing_yml);
 file_put_contents('app/config/routing.yml', str_replace('%app%', $app, $routing_yml));
