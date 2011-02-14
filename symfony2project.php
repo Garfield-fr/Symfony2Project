@@ -216,6 +216,22 @@ $config_db_yml = <<<'EOF'
 
 EOF;
 
+$config_propel_yml = <<<'EOF'
+
+propel.config:
+    path:       "%kernel.root_dir%/../vendor/propel"
+    phing_path: "%kernel.root_dir%/../vendor/phing"
+#    charset:   "UTF8"
+
+## Propel Configuration
+propel.dbal:
+    driver:   mysql
+    user:     root
+    password: null
+    dsn:      mysql:host=localhost;dbname=xxxxx
+
+EOF;
+
 $config_dev_yml = <<<'EOF'
 imports:
     - { resource: config.yml }
@@ -428,7 +444,7 @@ EOF;
 $loader_array = array(
   'Symfony' => '$vendorDir.\'/symfony/src\'',
   '%vendor%' => '__DIR__.\'/../src\'',
-  'Zend' => '$vendorDir.\'/zend/library\''
+  'Zend' => '$vendorDir.\'/zend/library\'',
 );
 
 $loader_db_array = array(
@@ -441,10 +457,20 @@ $loader_db_array = array(
   'Doctrine' => '$vendorDir.\'/doctrine/lib\''
 );
 
+$loader_propel_array = array(
+  'Propel' => '__DIR__.\'/../src\'',
+);
+
 $kernel_class = <<<'EOF'
             new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
             //new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
             //new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
+
+EOF;
+
+$kernel_class_propel = <<<'EOF'
+            // PropelBundle
+            new Propel\PropelBundle\PropelBundle(),
 
 EOF;
 
@@ -457,7 +483,7 @@ if (0 == count($argv))
 {
   echo <<<'EOF'
 
-Usage: php symfony2project.php --app=AppName --vendor=VendorName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true] [--template-engine=twig|php]
+Usage: php symfony2project.php --app=AppName --vendor=VendorName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true] [--orm=doctrine|propel] [--template-engine=twig|php]
 
 --app                : Application name (mandatory)
 --vendor             : Vendor name (mandatory)
@@ -469,6 +495,7 @@ Usage: php symfony2project.php --app=AppName --vendor=VendorName [--path=/your/d
 --session-name       : Session name (default: Application name)
 --symfony-repository : fabpot or symfony (default: symfony)
 --with-db            : false or true (default: true)
+--orm                : doctrine or propel (default: doctrine)
 --template-engine    : twig or php (default: twig)
 
 
@@ -496,7 +523,6 @@ if (!$vendor = @$params['vendor'])
   echo "Vendor name is mandatory\n";
   exit;
 }
-
 
 if (!$dir = @$params['path'])
 {
@@ -536,11 +562,26 @@ if($repo = @$params['symfony-repository'])
     }
 }
 
+$orms = array('doctrine', 'propel');
+$orm = 'doctrine';
+if ($orm_value = @$params['orm'])
+{
+    if (in_array($orm_value, $orms))
+    {
+        $orm = $orm_value;
+    }
+}
+
 $with_db = ((!@$params['with-db']) || ('true' === @$params['with-db'])) ? true : false;
 
 if ($with_db)
 {
-  $loader_array = array_merge($loader_array, $loader_db_array);
+  if ('propel' === $orm) {
+    $loader_array = array_merge($loader_array, $loader_propel_array);
+  } else {
+    $loader_array = array_merge($loader_array, $loader_db_array);
+  }
+  
   $loader_transform = array();
   foreach ($loader_array as $key => $value)
   {
@@ -646,7 +687,11 @@ file_put_contents('app/AppCache.php', $app_cache);
 $app_kernel = str_replace(array('%app%', '%vendor%'), array($app, $vendor), $app_kernel);
 if ($with_db)
 {
-  $app_kernel = str_replace('%class%', $kernel_class, $app_kernel);
+  if ('propel' === $orm) {
+    $app_kernel = str_replace('%class%', $kernel_class_propel, $app_kernel);
+  } else {
+    $app_kernel = str_replace('%class%', $kernel_class, $app_kernel);
+  }
 }
 else
 {
@@ -667,8 +712,13 @@ $config_yml = str_replace('%engine%', $engine, $config_yml);
 
 if ($with_db)
 {
-  $config_db_yml = str_replace('%app%', $app, $config_db_yml);
-  $config_yml = str_replace('%configdb%', $config_db_yml, $config_yml);
+  if ('propel' === $orm) {
+    $config_db_yml = str_replace('%app%', $app, $config_propel_yml);
+    $config_yml = str_replace('%configdb%', $config_propel_yml, $config_yml);
+  } else {
+    $config_db_yml = str_replace('%app%', $app, $config_db_yml);
+    $config_yml = str_replace('%configdb%', $config_db_yml, $config_yml);
+  }
 }
 else
 {
@@ -743,15 +793,23 @@ $git_repository = array(
 
 if ($with_db)
 {
-  $git_db_repository = array(
-    'git://github.com/doctrine/doctrine2.git'               => 'vendor/doctrine',
-    'git://github.com/doctrine/data-fixtures.git'           => 'vendor/doctrine-data-fixtures',
-    'git://github.com/doctrine/dbal.git'                    => 'vendor/doctrine-dbal',
-    'git://github.com/doctrine/common.git'                  => 'vendor/doctrine-common',
-    'git://github.com/doctrine/migrations.git'              => 'vendor/doctrine-migrations',
-    'git://github.com/doctrine/mongodb.git'                 => 'vendor/doctrine-mongodb',
-    'git://github.com/doctrine/mongodb-odm.git'             => 'vendor/doctrine-mongodb-odm',
-  );
+  if ('propel' === $orm) {
+    $git_db_repository = array(
+      'git://github.com/willdurand/PropelBundle.git'          => 'src/Propel/PropelBundle',
+      'git://github.com/KaroDidi/phing.git'                   => 'vendor/phing',
+      'git://github.com/KaroDidi/propel1.6.git'               => 'vendor/propel',
+    );
+  } else {
+    $git_db_repository = array(
+      'git://github.com/doctrine/doctrine2.git'               => 'vendor/doctrine',
+      'git://github.com/doctrine/data-fixtures.git'           => 'vendor/doctrine-data-fixtures',
+      'git://github.com/doctrine/dbal.git'                    => 'vendor/doctrine-dbal',
+      'git://github.com/doctrine/common.git'                  => 'vendor/doctrine-common',
+      'git://github.com/doctrine/migrations.git'              => 'vendor/doctrine-migrations',
+      'git://github.com/doctrine/mongodb.git'                 => 'vendor/doctrine-mongodb',
+      'git://github.com/doctrine/mongodb-odm.git'             => 'vendor/doctrine-mongodb-odm',
+    );
+  }
   
   $git_repository = array_merge($git_repository, $git_db_repository);
 }
