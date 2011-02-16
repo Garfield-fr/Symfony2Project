@@ -59,6 +59,7 @@ class AppKernel extends Kernel
             // enable third-party bundles
             new Symfony\Bundle\ZendBundle\ZendBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
+            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
 %class%
             new %vendor%\%app%Bundle\%app%Bundle(),
         );
@@ -186,6 +187,8 @@ app.config:
         lifetime:       3600
         auto_start:     %start%
         name:           %sessionname%
+
+assetic.config: ~
 
 twig.config:
     debug:            %kernel.debug%
@@ -428,7 +431,8 @@ EOF;
 $loader_array = array(
   'Symfony' => '$vendorDir.\'/symfony/src\'',
   '%vendor%' => '__DIR__.\'/../src\'',
-  'Zend' => '$vendorDir.\'/zend/library\''
+  'Zend' => '$vendorDir.\'/zend/library\'',
+  'Assetic' => '$vendorDir.\'/assetic/src\''
 );
 
 $loader_db_array = array(
@@ -739,6 +743,7 @@ $git_repository = array(
   'git://github.com/fabpot/Twig.git'                      => 'vendor/twig',
   'git://github.com/fabpot/Twig-extensions.git'           => 'vendor/twig-extensions',
   'git://github.com/zendframework/zf2.git'                => 'vendor/zend',
+  'git://github.com/kriswallsmith/assetic.git'            => 'vendor/assetic',
 );
 
 if ($with_db)
