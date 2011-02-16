@@ -171,7 +171,7 @@ EOF;
 
 
 $config_yml = <<<'EOF'
-app.config:
+framework:
     charset:       UTF-8
     error_handler: null
     csrf_secret:
@@ -188,14 +188,14 @@ app.config:
         auto_start:     %start%
         name:           %sessionname%
 
-assetic.config: ~
+assetic: ~
 
-twig.config:
+twig:
     debug:            %kernel.debug%
     strict_variables: %kernel.debug%
 %configdb%
 ## Swiftmailer Configuration
-#swiftmailer.config:
+#swiftmailer:
 #    transport:  smtp
 #    encryption: ssl
 #    auth_mode:  login
@@ -207,15 +207,16 @@ EOF;
 $config_db_yml = <<<'EOF'
 
 ## Doctrine Configuration
-#doctrine.dbal:
-#    dbname:   xxxxxxxx
-#    user:     xxxxxxxx
-#    password: ~
-#    logging:  %kernel.debug%
-#doctrine.orm:
-#    auto_generate_proxy_classes: %kernel.debug%
-#    mappings:
-#        %app%Bundle: ~
+#doctrine:
+#    dbal:
+#        dbname:   xxxxxxxx
+#        user:     xxxxxxxx
+#        password: ~
+#        logging:  %kernel.debug%
+#    orm:
+#        auto_generate_proxy_classes: %kernel.debug%
+#        mappings:
+#           %app%Bundle: ~
 
 EOF;
 
@@ -223,15 +224,15 @@ $config_dev_yml = <<<'EOF'
 imports:
     - { resource: config.yml }
 
-app.config:
+framework:
     router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
     profiler: { only_exceptions: false }
 
-webprofiler.config:
+web_profiler:
     toolbar: true
     intercept_redirects: true
 
-zend.config:
+zend:
     logger:
         priority: debug
         path:     %kernel.logs_dir%/%kernel.environment%.log
@@ -246,15 +247,15 @@ $config_test_yml = <<<'EOF'
 imports:
     - { resource: config_dev.yml }
 
-app.config:
+framework:
     error_handler: false
     test: ~
 
-webprofiler.config:
+web_profiler:
     toolbar: false
     intercept_redirects: false
 
-zend.config:
+zend:
     logger:
         priority: debug
 EOF;
