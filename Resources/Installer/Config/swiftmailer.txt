@@ -1,0 +1,9 @@
+
+## Swiftmailer Configuration
+#swiftmailer:
+#    transport:  smtp
+#    encryption: ssl
+#    auth_mode:  login
+#    host:       smtp.gmail.com
+#    username:   xxxxxxxx
+#    password:   xxxxxxxx

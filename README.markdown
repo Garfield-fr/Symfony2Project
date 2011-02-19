@@ -2,21 +2,29 @@
 
 
 ##Usage
- 
-    php symfony2project.php --app=AppName --vendor=VendorName [--path=/your/destination/path] [--controller=controllerName] [--protocol=git|http] [--session-start=false|true] [--session-name=sessionName] [--symfony-repository=fabpot|symfony] [--with-db=false|true] [--template-engine=twig|php]
+
+    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--symfony-repository[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--template-engine[="..."]]
 
 ###Arguments
 
-    --app                : application name (mandatory)
-    --vendor             : vendor name (mandatory)
-    --path               : directory name (path) (default: current dir)
-    --controller         : your first controller name (optional)
-                           (suggestion: home or main, you can change it later if you change your mind)
-    --protocol           : git or http (if git is not enable in your company)
-    --session-start      : false or true (auto_start parameter on session) (default: false)
-    --session-name       : Session name (default: Application name)
-    --symfony-repository : fabpot or symfony (default: symfony)
-    --with-db            : false or true (default: true)
-    --template-engine    : twig or php (default: twig)
+    AppName                : application name (mandatory)
+    VendorName             : vendor name (mandatory)
+    Path                   : directory name (path)
+
+###Options
+
+    --controller           : Your first controller name
+    --protocol             : git or http (default: git)
+    --session-start        : false or true (default: false)
+    --session-name         : Session name (default: symfony)
+    --symfony-repository   : fabpot or symfony (default: symfony)
+    --orm                  : doctrine or propel
+    --odm                  : mongodb
+    --assetic              : Enable assetic
+    --swiftmailer          : Enable swiftmailer
+    --doctrine-migration   : Enable doctrine migration
+    --doctrine-fixtures    : Enable doctrine fixtures
+    --template-engine      : twig or php (default: twig)
+
 
 *Note: only tested on unix system.*
