@@ -254,7 +254,7 @@ EOT
         if ($input->getOption('assetic')) {
             $nsCollection->add(new Nspace('Assetic', 'vendor/assetic/src'));
         }
-        $nsCollection->add(new Nspace('Zend', 'vendor/zend/library'));
+        $nsCollection->add(new Nspace('Zend', 'vendor/zend-log'));
 
         return $nsCollection->getFormatted(4);
     }
