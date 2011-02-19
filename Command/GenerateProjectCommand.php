@@ -254,7 +254,7 @@ EOT
         if ($input->getOption('assetic')) {
             $nsCollection->add(new Nspace('Assetic', 'vendor/assetic/src'));
         }
-        $nsCollection->add(new Nspace('Zend', 'vendor/zend/library'));
+        $nsCollection->add(new Nspace('Zend', 'vendor/zend-log'));
 
         return $nsCollection->getFormatted(4);
     }
@@ -288,7 +288,7 @@ EOT
         $reposCollection = new RepositoryCollection();
         $repo = $input->getOption('symfony-repository');
         $reposCollection->add(new Repository(sprintf('github.com/%s/symfony.git', $repo), 'vendor/symfony'));
-        $reposCollection->add(new Repository('github.com/zendframework/zf2.git', 'vendor/zend'));
+        $reposCollection->add(new Repository('github.com/symfony/zend-log.git', 'vendor/zend-log/Zend/Log'));
         if ($input->getOption('swiftmailer')) {
             $reposCollection->add(new Repository('github.com/swiftmailer/swiftmailer.git', 'vendor/swiftmailer'));
         }
