@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Congratulations</title>
+    </head>
+    <body>
+        <h1>Congratulations!</h1>
+        <p>You have successfully created a new Symfony application.</p>
+    </body>
+</html>
