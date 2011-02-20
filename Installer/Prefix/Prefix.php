@@ -16,8 +16,14 @@ class Prefix
         $this->path = $path;
     }
     
-    public function get()
+    public function getPrefix()
     {
-        return sprintf("'%s_' => __DIR__.'/../%s'", $this->prefix,  $this->path);
+        return $this->prefix;
+    }
+    
+    public function get($maxspace)
+    {
+        $space = $maxspace - mb_strlen($this->prefix) + 2;
+        return sprintf("'%s_'%s => __DIR__.'/../%s'", $this->prefix, str_repeat(' ', $space), $this->path);
     }
 }

@@ -12,9 +12,12 @@ class NspaceCollection
 {
     protected $collection;
     
+    protected $size;
+    
     public function add($namespace)
     {
         $this->collection[] = $namespace;
+        $this->calculateSize($namespace->getNamespace());
     }
     
     public function getFormatted($space = 4)
@@ -22,9 +25,16 @@ class NspaceCollection
         $namespaces = '';
         foreach ($this->collection as $namespace)
         {
-            $namespaces .= $namespace->get().",\n".str_repeat(' ', $space);
+            $namespaces .= $namespace->get($this->size).",\n".str_repeat(' ', $space);
         }
         
         return trim($namespaces);
+    }
+    
+    private function calculateSize($name)
+    {
+        if ($this->size < mb_strlen($name)) {
+            $this->size = mb_strlen($name);
+        }
     }
 }

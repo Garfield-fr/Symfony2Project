@@ -16,12 +16,18 @@ class Nspace
     
     public function __construct($ns, $path)
     {
-        $this->ns = $ns;
+        $this->ns = str_replace('\\', '\\\\', $ns);
         $this->path = $path;
     }
     
-    public function get()
+    public function getNamespace()
     {
-        return sprintf("'%s' => __DIR__.'/../%s'", str_replace('\\', '\\\\', $this->ns),  $this->path);
+        return $this->ns;
+    }
+    
+    public function get($maxspace = 0)
+    {
+        $space = $maxspace - mb_strlen($this->ns) + 2;
+        return sprintf("'%s'%s => __DIR__.'/../%s'", $this->ns, str_repeat(' ',$space),  $this->path);
     }
 }
