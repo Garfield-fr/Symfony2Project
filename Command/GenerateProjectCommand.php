@@ -64,9 +64,8 @@ EOT
 
         $output->writeln('<info>Initializing Project</info>');
         $path = $input->getArgument('path');
-        if(!$input->getOption('force'))
-        {
-        	$this->checkPathAvailable($path, $filesystem);
+        if(!$input->getOption('force')) {
+            $this->checkPathAvailable($path, $filesystem);
         }
 
         $output->writeln(sprintf('> Generate project on <comment>%s</comment>', $path));
