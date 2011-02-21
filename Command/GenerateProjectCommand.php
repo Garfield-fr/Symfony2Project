@@ -39,7 +39,6 @@ class GenerateProjectCommand extends Command
             ->addOption('protocol', null, InputOption::VALUE_OPTIONAL, 'git or http', 'git')
             ->addOption('session-start', null, InputOption::VALUE_NONE, 'To start session automatically')
             ->addOption('session-name', null, InputOption::VALUE_OPTIONAL, 'Session name', 'symfony')
-            ->addOption('symfony-repository', null, InputOption::VALUE_OPTIONAL, 'fabpot or symfony', 'symfony')
             ->addOption('orm', null, InputOption::VALUE_OPTIONAL, 'doctrine or propel', null)
             ->addOption('odm', null, InputOption::VALUE_OPTIONAL, 'mongodb', null)
             ->addOption('assetic', null, InputOption::VALUE_NONE, 'Enable assetic')
@@ -94,9 +93,6 @@ EOT
     {
         if (!in_array($input->getOption('protocol'), array('git', 'http'))) {
             throw new \RuntimeException('Protocol error. Values accepted: git or http');
-        }
-        if (!in_array($input->getOption('symfony-repository'), array('fabpot', 'symfony'))) {
-            throw new \RuntimeException('Symfony repository error. Values accepted: fabpot or symfony');
         }
         if (!in_array($input->getOption('template-engine'), array('twig', 'php'))) {
             throw new \RuntimeException('Template engine error. Values accepted: twig or php');
@@ -304,8 +300,7 @@ EOT
     private function getRepositoriesCollection($input)
     {
         $reposCollection = new RepositoryCollection();
-        $repo = $input->getOption('symfony-repository');
-        $reposCollection->add(new Repository(sprintf('github.com/%s/symfony.git', $repo), 'vendor/symfony'));
+        $reposCollection->add(new Repository('github.com/symfony/symfony.git', 'vendor/symfony'));
         $reposCollection->add(new Repository('github.com/symfony/zend-log.git', 'vendor/zend-log/Zend/Log'));
         if ($input->getOption('swiftmailer')) {
             $reposCollection->add(new Repository('github.com/swiftmailer/swiftmailer.git', 'vendor/swiftmailer'));
