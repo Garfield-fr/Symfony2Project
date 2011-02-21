@@ -64,7 +64,7 @@ EOT
 
         $output->writeln('<info>Initializing Project</info>');
         $path = $input->getArgument('path');
-        if($input->getOption('force')) {
+        if($input->getOption('force-delete')) {
             $output->writeln(sprintf('> Remove project on <comment>%s</comment>', $path));
             $this->removeProject($path, $filesystem);
         }
