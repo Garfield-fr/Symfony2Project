@@ -374,7 +374,7 @@ EOT
             'namespace' => $input->getArgument('vendor'),
             'appname' => $input->getArgument('app'),
             'controller' => $input->getOption('controller'),
-            'session_start' => $input->getOption('session-start'),
+            'session_start' => $input->getOption('session-start') ? 'true' : 'false',
             'session_name'  => $input->getOption('session-name'),
             'template_engine' => $input->getOption('template-engine'),
             'routing' => $routing,
