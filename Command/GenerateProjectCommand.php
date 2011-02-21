@@ -35,7 +35,7 @@ class GenerateProjectCommand extends Command
                 new InputArgument('vendor', InputArgument::REQUIRED, 'Vendor name'),
                 new InputArgument('path', InputArgument::REQUIRED, 'Directory name (path)'),
             ))
-            ->addOption('controller', null, InputOption::VALUE_OPTIONAL, 'Your first controller name', null)
+            ->addOption('controller', null, InputOption::VALUE_OPTIONAL, 'Your first controller name', 'Main')
             ->addOption('protocol', null, InputOption::VALUE_OPTIONAL, 'git or http', 'git')
             ->addOption('session-start', null, InputOption::VALUE_NONE, 'To start session automatically')
             ->addOption('session-name', null, InputOption::VALUE_OPTIONAL, 'Session name', 'symfony')
@@ -163,6 +163,8 @@ EOT
 
         $extension = ('twig' === $input->getOption('template-engine')) ? 'php' : 'twig';
         $filesystem->remove($targetBundleDir.'/Resources/Views/layout.html.'.$extension);
+        $filesystem->remove($targetBundleDir.'/Resources/Views/'.$controller.'/index.html.'.$extension);
+        $filesystem->remove($targetBundleDir.'/Resources/Views/'.$controller.'/welcome.html.'.$extension);
         $filesystem->remove($path.'/app/Views/base.html.'.$extension);
 
         /* create empty folder */
@@ -173,8 +175,6 @@ EOT
         $filesystem->mkdirs($targetBundleDir.'/Resources/public');
         $filesystem->mkdirs($targetBundleDir.'/Tests');
 
-        $filesystem->chmod($path.'/app/cache', 0777);
-        $filesystem->chmod($path.'/app/logs', 0777);
         $filesystem->chmod($path.'/app/console', 0755);
     }
 
@@ -255,7 +255,7 @@ EOT
         if ($input->getOption('assetic')) {
             $nsCollection->add(new Nspace('Assetic', 'vendor/assetic/src'));
         }
-        $nsCollection->add(new Nspace('Zend', 'vendor/zend-log'));
+        $nsCollection->add(new Nspace('Zend\Log', 'vendor/zend-log'));
 
         return $nsCollection->getFormatted(4);
     }

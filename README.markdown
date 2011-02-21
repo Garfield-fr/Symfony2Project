@@ -13,7 +13,7 @@
 
 ###Options
 
-    --controller           : Your first controller name
+    --controller           : Your first controller name (default: Main)
     --protocol             : git or http (default: git)
     --session-start        : false or true (default: false)
     --session-name         : Session name (default: symfony)
