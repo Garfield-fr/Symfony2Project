@@ -239,7 +239,7 @@ EOT
                 $nsCollection->add(new Nspace('Doctrine\DBAL\Migrations', 'vendor/doctrine-migrations/lib'));
             }
         }
-        if ('mongodb' === $input->getOption('orm')) {
+        if ('mongodb' === $input->getOption('odm')) {
             $nsCollection->add(new Nspace('Doctrine\MongoDB', 'vendor/doctrine-mongodb/lib'));
             $nsCollection->add(new Nspace('Doctrine\ODM\MongoDB', 'vendor/doctrine-mongodb-odm/lib'));
         }
