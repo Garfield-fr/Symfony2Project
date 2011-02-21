@@ -3,7 +3,7 @@
 
 ##Usage
 
-    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--symfony-repository[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--template-engine[="..."]] [--force-delete]
+    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--template-engine[="..."]] [--force-delete]
 
 ###Arguments
 
@@ -17,7 +17,6 @@
     --protocol             : git or http (default: git)
     --session-start        : To start session automatically
     --session-name         : Session name (default: symfony)
-    --symfony-repository   : fabpot or symfony (default: symfony)
     --orm                  : doctrine or propel
     --odm                  : mongodb
     --assetic              : Enable assetic
