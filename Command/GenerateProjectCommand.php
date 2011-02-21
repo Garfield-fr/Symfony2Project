@@ -37,7 +37,7 @@ class GenerateProjectCommand extends Command
             ))
             ->addOption('controller', null, InputOption::VALUE_OPTIONAL, 'Your first controller name', null)
             ->addOption('protocol', null, InputOption::VALUE_OPTIONAL, 'git or http', 'git')
-            ->addOption('session-start', null, InputOption::VALUE_OPTIONAL, 'false or true', 'false')
+            ->addOption('session-start', null, InputOption::VALUE_NONE, 'To start session automatically')
             ->addOption('session-name', null, InputOption::VALUE_OPTIONAL, 'Session name', 'symfony')
             ->addOption('symfony-repository', null, InputOption::VALUE_OPTIONAL, 'fabpot or symfony', 'symfony')
             ->addOption('orm', null, InputOption::VALUE_OPTIONAL, 'doctrine or propel', null)
@@ -47,6 +47,7 @@ class GenerateProjectCommand extends Command
             ->addOption('doctrine-migration', null, InputOption::VALUE_NONE, 'Enable doctrine migration')
             ->addOption('doctrine-fixtures', null, InputOption::VALUE_NONE, 'Enable doctrine fixtures')
             ->addOption('template-engine', null, InputOption::VALUE_OPTIONAL, 'twig or php', 'twig')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Force re-generation of project')
             ->setName('generate:project')
             ->setDescription('Generate a Symfony2 project')
             ->setHelp(<<<EOT
@@ -63,7 +64,10 @@ EOT
 
         $output->writeln('<info>Initializing Project</info>');
         $path = $input->getArgument('path');
-        $this->checkPathAvailable($path, $filesystem);
+        if(!$input->getOption('force'))
+        {
+        	$this->checkPathAvailable($path, $filesystem);
+        }
 
         $output->writeln(sprintf('> Generate project on <comment>%s</comment>', $path));
         $this->generateProjectFolder($input, $filesystem);
@@ -89,9 +93,6 @@ EOT
     {
         if (!in_array($input->getOption('protocol'), array('git', 'http'))) {
             throw new \RuntimeException('Protocol error. Values accepted: git or http');
-        }
-        if (!in_array($input->getOption('session-start'), array('true', 'false'))) {
-            throw new \RuntimeException('Session start error. Values accepted: true or false');
         }
         if (!in_array($input->getOption('symfony-repository'), array('fabpot', 'symfony'))) {
             throw new \RuntimeException('Symfony repository error. Values accepted: fabpot or symfony');
