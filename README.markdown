@@ -3,7 +3,7 @@
 
 ##Usage
 
-    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--symfony-repository[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--template-engine[="..."]]
+    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--symfony-repository[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--template-engine[="..."]] [--force-delete]
 
 ###Arguments
 
@@ -15,7 +15,7 @@
 
     --controller           : Your first controller name (default: Main)
     --protocol             : git or http (default: git)
-    --session-start        : false or true (default: false)
+    --session-start        : To start session automatically
     --session-name         : Session name (default: symfony)
     --symfony-repository   : fabpot or symfony (default: symfony)
     --orm                  : doctrine or propel
@@ -25,6 +25,7 @@
     --doctrine-migration   : Enable doctrine migration
     --doctrine-fixtures    : Enable doctrine fixtures
     --template-engine      : twig or php (default: twig)
+    --force-delete         : Force re-generation of project
 
 
 *Note: only tested on unix system.*

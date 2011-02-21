@@ -47,7 +47,7 @@ class GenerateProjectCommand extends Command
             ->addOption('doctrine-migration', null, InputOption::VALUE_NONE, 'Enable doctrine migration')
             ->addOption('doctrine-fixtures', null, InputOption::VALUE_NONE, 'Enable doctrine fixtures')
             ->addOption('template-engine', null, InputOption::VALUE_OPTIONAL, 'twig or php', 'twig')
-            ->addOption('force', null, InputOption::VALUE_NONE, 'Force re-generation of project')
+            ->addOption('force-delete', null, InputOption::VALUE_NONE, 'Force re-generation of project')
             ->setName('generate:project')
             ->setDescription('Generate a Symfony2 project')
             ->setHelp(<<<EOT
@@ -64,9 +64,11 @@ EOT
 
         $output->writeln('<info>Initializing Project</info>');
         $path = $input->getArgument('path');
-        if(!$input->getOption('force')) {
-            $this->checkPathAvailable($path, $filesystem);
+        if($input->getOption('force')) {
+            $output->writeln(sprintf('> Remove project on <comment>%s</comment>', $path));
+            $this->removeProject($path, $filesystem);
         }
+        $this->checkPathAvailable($path, $filesystem);
 
         $output->writeln(sprintf('> Generate project on <comment>%s</comment>', $path));
         $this->generateProjectFolder($input, $filesystem);
@@ -101,6 +103,22 @@ EOT
         }
     }
 
+    /**
+     * Remove project
+     *
+     * @param $path
+     * @param $filesystem
+     */
+    private function removeProject($path, $filesystem)
+    {
+        foreach (array('.git', 'app', 'src', 'vendor', 'web') as $file) {
+            $file_path = sprintf('%s/%s', $path, $file);
+            if (file_exists($file_path)) {
+                $filesystem->remove($file_path);
+            }
+        }
+    }
+    
     /**
      * Generate Bundle Collection
      *
