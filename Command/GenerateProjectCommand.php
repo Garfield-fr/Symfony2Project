@@ -211,8 +211,7 @@ EOT
             $bundlesCollection->add(new Bundle('Assetic'));
         }
         if ($input->getOption('orm')) {
-            if ('doctrine' === $input->getOption('orm'))
-            {
+            if ('doctrine' === $input->getOption('orm')) {
                 $bundlesCollection->add(new Bundle('Doctrine'));
                 if ($input->getOption('doctrine-migration')) {
                     $bundlesCollection->add(new Bundle('DoctrineMigrations'));
