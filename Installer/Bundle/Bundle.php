@@ -16,8 +16,8 @@ class Bundle
     
     public function __construct($name, $ns = null)
     {
-        $this->name = $name;
-        $this->ns = $ns;
+        $this->name = (string) $name;
+        $this->ns = (string) $ns;
     }
 
     public function get()

@@ -12,8 +12,8 @@ class Prefix
 {
     public function __construct($prefix, $path)
     {
-        $this->prefix = $prefix;
-        $this->path = $path;
+        $this->prefix = (string) $prefix;
+        $this->path = (string) $path;
     }
     
     public function getPrefix()

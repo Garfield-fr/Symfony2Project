@@ -13,19 +13,35 @@ class Repository
     
     protected $target;
     
-    public function __construct($source, $target)
-    {
-        $this->source = $source;
-        $this->target = $target;
-    }
+    protected $type;
     
+    protected $revision;
+    
+    public function __construct($source, $target, $type, $revision)
+    {
+        $this->source = (string) $source;
+        $this->target = (string) $target;
+        $this->type = (string) $type;
+        $this->revision = (string) $revision;
+    }
+
     public function getSource()
     {
         return $this->source;
     }
-    
+
     public function getTarget()
     {
         return $this->target;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getRevision()
+    {
+        return $this->revision;
     }
 }

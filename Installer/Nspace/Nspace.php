@@ -16,8 +16,8 @@ class Nspace
     
     public function __construct($ns, $path)
     {
-        $this->ns = str_replace('\\', '\\\\', $ns);
-        $this->path = $path;
+        $this->ns = (string) str_replace('\\', '\\\\', $ns);
+        $this->path = (string) $path;
     }
     
     public function getNamespace()

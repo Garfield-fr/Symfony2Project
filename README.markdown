@@ -3,7 +3,7 @@
 
 ##Usage
 
-    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--template-engine[="..."]] [--force-delete]
+    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--profile[="..."]] [--template-engine[="..."]] [--force-delete]
 
 ###Arguments
 
@@ -24,7 +24,17 @@
     --doctrine-migration   : Enable doctrine migration
     --doctrine-fixtures    : Enable doctrine fixtures
     --template-engine      : twig or php (default: twig)
+    --profile              : Profile name (default: default)
     --force-delete         : Force re-generation of project
+
+###Profile
+
+    Before execute this command, copy the file Resources/Profile/default.xml.dist
+    to Resources/Profile/default.xml
+    
+    if you would like to personalize, open this file, modify or add some parameters.
+    
+    You can also create new profile, copy the file default.xml.dist, rename (ex: foo.xml) and use --profile=foo on command line.
 
 
 *Note: only tested on unix system.*

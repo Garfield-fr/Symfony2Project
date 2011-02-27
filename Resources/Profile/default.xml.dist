@@ -1,0 +1,239 @@
+<?xml version="1.0" ?>
+<config>
+    <repositories>
+        <!-- Customize this part but don't delete -->
+        <installer>
+            <symfony>
+                <source>github.com/symfony/symfony.git</source>
+                <target>vendor/symfony</target>
+                <revision type="branch">master</revision>
+            </symfony>
+            <zendlog>
+                <source>github.com/symfony/zend-log.git</source>
+                <target>vendor/zend-log/Zend/Log</target>
+                <revision type="branch">master</revision>
+            </zendlog>
+            <swiftmailer>
+                <source>github.com/swiftmailer/swiftmailer.git</source>
+                <target>vendor/swiftmailer</target>
+                <revision type="branch">4.1</revision>
+            </swiftmailer>
+            <assetic>
+                <source>github.com/kriswallsmith/assetic.git</source>
+                <target>vendor/assetic</target>
+                <revision type="branch">master</revision>
+            </assetic>
+            <twig>
+                <source>github.com/fabpot/Twig.git</source>
+                <target>vendor/twig</target>
+                <revision type="branch">master</revision>
+            </twig>
+            <twigextensions>
+                <source>github.com/fabpot/Twig-extensions.git</source>
+                <target>vendor/twig-extensions</target>
+                <revision type="branch">master</revision>
+            </twigextensions>
+            <doctrine>
+                <source>github.com/doctrine/doctrine2.git</source>
+                <target>vendor/doctrine</target>
+                <revision type="tag">2.0.1</revision>
+            </doctrine>
+            <doctrinedbal>
+                <source>github.com/doctrine/dbal.git</source>
+                <target>vendor/doctrine-dbal</target>
+                <revision type="tag">2.0.1</revision>
+            </doctrinedbal>
+            <doctrinedatafixtures>
+                <source>github.com/doctrine/data-fixtures.git</source>
+                <target>vendor/doctrine-data-fixtures</target>
+                <revision type="branch">master</revision>
+            </doctrinedatafixtures>
+            <doctrinemigrations>
+                <source>github.com/doctrine/migrations.git</source>
+                <target>vendor/doctrine-migrations</target>
+                <revision type="branch">master</revision>
+            </doctrinemigrations>
+            <doctrinecommon>
+                <source>github.com/doctrine/common.git</source>
+                <target>vendor/doctrine-common</target>
+                <revision type="tag">2.0.1</revision>
+            </doctrinecommon>
+            <doctrinemongodb>
+                <source>github.com/doctrine/mongodb.git</source>
+                <target>vendor/doctrine-mongodb</target>
+                <revision type="branch">master</revision>
+            </doctrinemongodb>
+            <doctrinemongodbodm>
+                <source>github.com/doctrine/mongodb-odm.git</source>
+                <target>vendor/doctrine-mongodb-odm</target>
+                <revision type="branch">master</revision>
+            </doctrinemongodbodm>
+            <propelbundle>
+                <source>github.com/willdurand/PropelBundle.git</source>
+                <target>src/Propel/PropelBundle</target>
+                <revision type="branch">master</revision>
+            </propelbundle>
+            <phing>
+                <source>github.com/KaroDidi/phing.git</source>
+                <target>vendor/phing</target>
+                <revision type="branch">master</revision>
+            </phing>
+            <propel>
+                <source>github.com/KaroDidi/propel1.6.git</source>
+                <target>vendor/propel</target>
+                <revision type="branch">master</revision>
+            </propel>
+        </installer>
+        
+        <!-- Add your custom repository here -->
+        <!--
+        <user>
+            <...>
+                <source>...</source>
+                <target>...</target>
+                <revision type="...">...</revision>
+            </...>
+        </user>
+        -->
+    </repositories>
+
+    <bundles>
+        <!-- Customize this part but don't delete -->
+        <installer>
+            <framework>
+                <name>Framework</name>
+                <namespace>Symfony\Bundle\FrameworkBundle</namespace>
+            </framework>
+            <zend>
+                <name>Zend</name>
+                <namespace>Symfony\Bundle\ZendBundle</namespace>
+            </zend>
+            <twig>
+                <name>Twig</name>
+                <namespace>Symfony\Bundle\TwigBundle</namespace>
+            </twig>
+            <swiftmailer>
+                <name>Swiftmailer</name>
+                <namespace>Symfony\Bundle\SwiftmailerBundle</namespace>
+            </swiftmailer>
+            <assetic>
+                <name>Assetic</name>
+                <namespace>Symfony\Bundle\AsseticBundle</namespace>
+            </assetic>
+            <doctrine>
+                <name>Doctrine</name>
+                <namespace>Symfony\Bundle\DoctrineBundle</namespace>
+            </doctrine>
+            <doctrinemigrations>
+                <name>DoctrineMigrations</name>
+                <namespace>Symfony\Bundle\DoctrineMigrationsBundle</namespace>
+            </doctrinemigrations>
+            <propel>
+                <name>Propel</name>
+                <namespace>Propel\PropelBundle</namespace>
+            </propel>
+            <doctrinemongodb>
+                <name>DoctrineMongoDB</name>
+                <namespace>Symfony\Bundle\DoctrineMongoDBBundle</namespace>
+            </doctrinemongodb>
+        </installer>
+
+        <!-- Add your custom bundle here -->
+        <!--
+        <user>
+            <...>
+                <name>...</name>
+                <namespace>...</namespace>
+            </...>
+        </user>
+        -->
+    </bundles>
+
+    <namespaces>
+        <!-- Customize this part but don't delete -->
+        <installer>
+            <symfony>
+                <name>Symfony</name>
+                <path>vendor/symfony/src</path>
+            </symfony>
+            <doctrinedatafixtures>
+                <name>Doctrine\Common\DataFixtures</name>
+                <path>vendor/doctrine-data-fixtures/lib</path>
+            </doctrinedatafixtures>
+            <doctrinecommon>
+                <name>Doctrine\Common</name>
+                <path>vendor/doctrine-common/lib</path>
+            </doctrinecommon>
+            <doctrinemigrations>
+                <name>Doctrine\DBAL\Migrations</name>
+                <path>vendor/doctrine-migrations/lib</path>
+            </doctrinemigrations>
+            <doctrinemongodb>
+                <name>Doctrine\MongoDB</name>
+                <path>vendor/doctrine-mongodb/lib</path>
+            </doctrinemongodb>
+            <doctrinemongodbodm>
+                <name>Doctrine\ODM\MongoDB</name>
+                <path>vendor/doctrine-mongodb-odm/lib</path>
+            </doctrinemongodbodm>
+            <doctrinedbal>
+                <name>Doctrine\DBAL</name>
+                <path>vendor/doctrine-dbal/lib</path>
+            </doctrinedbal>
+            <doctrine>
+                <name>Doctrine</name>
+                <path>vendor/doctrine/lib</path>
+            </doctrine>
+            <propel>
+                <name>Propel</name>
+                <path>src</path>
+            </propel>
+            <assetic>
+                <name>Assetic</name>
+                <path>vendor/assetic/src</path>
+            </assetic>
+            <zendlog>
+                <name>Zend\Log</name>
+                <path>vendor/zend-log</path>
+            </zendlog>
+        </installer>
+        
+        <!-- Add your custom namespace here -->
+        <!--
+        <user>
+            <...>
+                <name>...</name>
+                <path>...</path>
+            </...>
+        </user>
+        -->
+    </namespaces>
+
+    <!-- Customize this part but don't delete -->
+    <prefixes>
+        <installer>
+            <twigextensions>
+                <name>Twig_Extensions</name>
+                <path>vendor/twig-extensions/lib</path>
+            </twigextensions>
+            <twig>
+                <name>Twig</name>
+                <path>vendor/twig/lib</path>
+            </twig>
+            <swiftmailer>
+                <name>Swift</name>
+                <path>vendor/swiftmailer/lib/classes</path>
+            </swiftmailer>
+        </installer>
+        
+        <!-- Add your custom prefix here -->
+        <!--
+        <user>
+            <...>
+                <name>...</name>
+                <path>...</path>
+            </...>
+        </user>
+        -->
+    </prefixes>
+</config>

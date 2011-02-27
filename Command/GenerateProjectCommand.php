@@ -46,6 +46,7 @@ class GenerateProjectCommand extends Command
             ->addOption('doctrine-migration', null, InputOption::VALUE_NONE, 'Enable doctrine migration')
             ->addOption('doctrine-fixtures', null, InputOption::VALUE_NONE, 'Enable doctrine fixtures')
             ->addOption('template-engine', null, InputOption::VALUE_OPTIONAL, 'twig or php', 'twig')
+            ->addOption('profile', null, InputOption::VALUE_OPTIONAL, 'Profile name', 'default')
             ->addOption('force-delete', null, InputOption::VALUE_NONE, 'Force re-generation of project')
             ->setName('generate:project')
             ->setDescription('Generate a Symfony2 project')
@@ -57,6 +58,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $config = $this->loadProfileFile($input->getOption('profile'));
         $this->checkOptionParameters($input);
 
         $filesystem = new Filesystem();
@@ -72,16 +74,20 @@ EOT
         $output->writeln(sprintf('> Generate project on <comment>%s</comment>', $path));
         $this->generateProjectFolder($input, $filesystem);
 
-        $bundles = $this->generateBundlesCollection($input);
-        $namespaces = $this->generateNamespacesCollection($input);
-        $prefixes = $this->generatePrefixesCollection($input);
+        $bundles = $this->generateBundlesCollection($input, $config);
+        $namespaces = $this->generateNamespacesCollection($input, $config);
+        $prefixes = $this->generatePrefixesCollection($input, $config);
         $this->findAndReplace($input, $bundles, $namespaces, $prefixes);
-        $repositories = $this->getRepositoriesCollection($input);
+        $repositories = $this->getRepositoriesCollection($input, $config);
         $this->installRepositories($repositories, $input, $output);
-
         $output->writeln(sprintf(' > <info>Clear cache and log</info>'));
         $filesystem->remove('app/cache/dev');
         $filesystem->remove('app/logs/dev.log');
+
+        if ($config->bundles->user || $config->namespaces->user ||
+            $config->prefixes->user || $config->repositories->user) {
+            $output->writeln(sprintf(' > <comment>Add your personalized config for this project</comment>'));
+        }
     }
 
     /**
@@ -196,33 +202,65 @@ EOT
      *
      * @param $input
      */
-    private function generateBundlesCollection($input)
+    private function generateBundlesCollection($input, $config)
     {
+        $bundles = $config->bundles->installer;
         $bundlesCollection = new BundleCollection();
-        $bundlesCollection->add(new Bundle('Framework'));
-        $bundlesCollection->add(new Bundle('Zend'));
+        $bundlesCollection->add(new Bundle(
+                                            $bundles->framework->name,
+                                            $bundles->framework->namespace
+                                        ));
+        $bundlesCollection->add(new Bundle(
+                                            $bundles->zend->name,
+                                            $bundles->zend->namespace
+                                        ));
         if ('twig' === $input->getOption('template-engine')) {
-            $bundlesCollection->add(new Bundle('Twig'));
+            $bundlesCollection->add(new Bundle(
+                                                $bundles->twig->name,
+                                                $bundles->twig->namespace
+                                            ));
         }
         if ($input->getOption('swiftmailer')) {
-            $bundlesCollection->add(new Bundle('Swiftmailer'));
+            $bundlesCollection->add(new Bundle(
+                                                $bundles->swiftmailer->name,
+                                                $bundles->swiftmailer->namespace
+                                            ));
         }
         if ($input->getOption('assetic')) {
-            $bundlesCollection->add(new Bundle('Assetic'));
+            $bundlesCollection->add(new Bundle(
+                                                $bundles->assetic->name,
+                                                $bundles->assetic->namespace
+                                            ));
         }
         if ($input->getOption('orm')) {
             if ('doctrine' === $input->getOption('orm')) {
-                $bundlesCollection->add(new Bundle('Doctrine'));
+                $bundlesCollection->add(new Bundle(
+                                                    $bundles->doctrine->name,
+                                                    $bundles->doctrine->namespace
+                                                ));
                 if ($input->getOption('doctrine-migration')) {
-                    $bundlesCollection->add(new Bundle('DoctrineMigrations'));
+                    $bundlesCollection->add(new Bundle(
+                                                        $bundles->doctrinemigrations->name,
+                                                        $bundles->doctrinemigrations->namespace
+                                                    ));
                 }
             }
             if ('propel' === $input->getOption('orm')) {
-                $bundlesCollection->add(new Bundle('Propel', 'Propel\PropelBundle'));
+                $bundlesCollection->add(new Bundle(
+                                                    $bundles->propel->name,
+                                                    $bundles->propel->namespace
+                                                ));
             }
         }
         if ('mongodb' === $input->getOption('odm')) {
-            $bundlesCollection->add(new Bundle('DoctrineMongoDB'));
+            $bundlesCollection->add(new Bundle(
+                                                $bundles->doctrinemongodb->name,
+                                                $bundles->doctrinemongodb->namespace
+                                            ));
+        }
+
+        if ($config_user = $config->bundles->user) {
+            $bundlesCollection = $this->addCustomBundlesToCollection($bundlesCollection, $config_user);
         }
 
         $app = $input->getArgument('app');
@@ -233,43 +271,136 @@ EOT
     }
 
     /**
+     * Add custom bundles to collection
+     *
+     * @param $bundlesCollection
+     * @param $custom_config
+     */
+    private function addCustomBundlesToCollection($bundlesCollection, $config_user)
+    {
+        foreach ($config_user as $config) {
+            foreach ($config as $bundle) {
+                if (!$name = @$bundle->name) {
+                    throw new \RuntimeException(sprintf("The parameter name on bundle is not defined\n"));
+                }
+                if (!$namespace = @$bundle->namespace) {
+                    throw new \RuntimeException(sprintf("The parameter namespace on bundle is not defined\n"));
+                }
+                $bundlesCollection->add(new Bundle(
+                                                    $name,
+                                                    $namespace
+                                                ));
+            }
+        }
+
+        return $bundlesCollection;
+    }
+    
+    /**
      * Generate Namespace collection
      *
      * @param $input
      */
-    private function generateNamespacesCollection($input)
+    private function generateNamespacesCollection($input, $config)
     {
+        $ns = $config->namespaces->installer;
         $nsCollection = new NspaceCollection();
-        $nsCollection->add(new Nspace('Symfony', 'vendor/symfony/src'));
-        $nsCollection->add(new Nspace($input->getArgument('vendor'), 'src'));
+        $nsCollection->add(new Nspace(
+                                        $ns->symfony->name,
+                                        $ns->symfony->path
+                                    ));
+        $nsCollection->add(new Nspace(
+                                        $input->getArgument('vendor'),
+                                        'src'
+                                    ));
         if ('doctrine' === $input->getOption('orm')) {
             if ($input->getOption('doctrine-fixtures')) {
-                $nsCollection->add(new Nspace('Doctrine\Common\DataFixtures', 'vendor/doctrine-data-fixtures/lib'));
+                $nsCollection->add(new Nspace(
+                                                $ns->doctrinedatafixtures->name,
+                                                $ns->doctrinedatafixtures->path
+                                            ));
             }
-            $nsCollection->add(new Nspace('Doctrine\Common', 'vendor/doctrine-common/lib'));
+            $nsCollection->add(new Nspace(
+                                            $ns->doctrinecommon->name,
+                                            $ns->doctrinecommon->path
+                                        ));
             if ($input->getOption('doctrine-migration')) {
-                $nsCollection->add(new Nspace('Doctrine\DBAL\Migrations', 'vendor/doctrine-migrations/lib'));
+                $nsCollection->add(new Nspace(
+                                                $ns->doctrinemigrations->name,
+                                                $ns->doctrinemigrations->path
+                                            ));
             }
         }
         if ('mongodb' === $input->getOption('odm')) {
-            $nsCollection->add(new Nspace('Doctrine\MongoDB', 'vendor/doctrine-mongodb/lib'));
-            $nsCollection->add(new Nspace('Doctrine\ODM\MongoDB', 'vendor/doctrine-mongodb-odm/lib'));
+            $nsCollection->add(new Nspace(
+                                            $ns->doctrinemongodb->name,
+                                            $ns->doctrinemongodb->path
+                                        ));
+            $nsCollection->add(new Nspace(
+                                            $ns->doctrinemongodbodm->name,
+                                            $ns->doctrinemongodbodm->path
+                                        ));
         }
         if ('doctrine' === $input->getOption('orm')) {
-            $nsCollection->add(new Nspace('Doctrine\DBAL', 'vendor/doctrine-dbal/lib'));
+            $nsCollection->add(new Nspace(
+                                            $ns->doctrinedbal->name,
+                                            $ns->doctrinedbal->path
+                                        ));
         }
         if (('doctrine' === $input->getOption('orm')) || ('mongodb' === $input->getOption('odm'))) {
-            $nsCollection->add(new Nspace('Doctrine', 'vendor/doctrine/lib'));
+            $nsCollection->add(new Nspace(
+                                            $ns->doctrine->name,
+                                            $ns->doctrine->path
+                                        ));
         }
         if ('propel' === $input->getOption('orm')) {
-            $nsCollection->add(new Nspace('Propel', 'src'));
+            $nsCollection->add(new Nspace(
+                                            $ns->propel->name,
+                                            $ns->doctrine->path
+                                        ));
         }
         if ($input->getOption('assetic')) {
-            $nsCollection->add(new Nspace('Assetic', 'vendor/assetic/src'));
+            $nsCollection->add(new Nspace(
+                                            $ns->assetic->name,
+                                            $ns->assetic->path
+                                        ));
         }
-        $nsCollection->add(new Nspace('Zend\Log', 'vendor/zend-log'));
+        $nsCollection->add(new Nspace(
+                                        $ns->zendlog->name,
+                                        $ns->zendlog->path
+                                    ));
 
+        if ($config_user = $config->namespaces->user) {
+            $nsCollection = $this->addCustomNamespacesToCollection($nsCollection, $config_user);
+        }
+        
         return $nsCollection->getFormatted(4);
+    }
+
+    /**
+     * Add custom namespaces to collection
+     *
+     * @param $nsCollection
+     * @param $custom_config
+     */
+    private function addCustomNamespacesToCollection($nsCollection, $config_user)
+    {
+        foreach ($config_user as $config) {
+            foreach ($config as $namespace) {
+                if (!$name = @$namespace->name) {
+                    throw new \RuntimeException(sprintf("The parameter name on namespace is not defined\n"));
+                }
+                if (!$path = @$namespace->path) {
+                    throw new \RuntimeException(sprintf("The parameter path on namespace is not defined\n"));
+                }
+                $nsCollection->add(new Nspace(
+                                                $name,
+                                                $path
+                                            ));
+            }
+        }
+
+        return $nsCollection;
     }
 
     /**
@@ -277,18 +408,58 @@ EOT
      *
      * @param $input
      */
-    private function generatePrefixesCollection($input)
+    private function generatePrefixesCollection($input, $config)
     {
+        $prefixes = $config->prefixes->installer;
         $prefixCollection = new PrefixCollection();
         if ('twig' === $input->getOption('template-engine')) {
-            $prefixCollection->add(new Prefix('Twig_Extensions', 'vendor/twig-extensions/lib'));
-            $prefixCollection->add(new Prefix('Twig', 'vendor/twig/lib'));
+            $prefixCollection->add(new Prefix(
+                                                $prefixes->twigextensions->name,
+                                                $prefixes->twigextensions->path
+                                            ));
+            $prefixCollection->add(new Prefix(
+                                                $prefixes->twig->name,
+                                                $prefixes->twig->path
+                                            ));
         }
         if ($input->getOption('swiftmailer')) {
-            $prefixCollection->add(new Prefix('Swift', 'vendor/swiftmailer/lib/classes'));
+            $prefixCollection->add(new Prefix(
+                                                $prefixes->swiftmailer->name,
+                                                $prefixes->swiftmailer->path
+                                            ));
+        }
+
+        if ($config_user = $config->prefixes->user) {
+            $prefixCollection = $this->addCustomPrefixesToCollection($prefixCollection, $config_user);
         }
 
         return $prefixCollection->getFormatted(4);
+    }
+
+    /**
+     * Add custom prefixes to collection
+     *
+     * @param $prefixCollection
+     * @param $custom_config
+     */
+    private function addCustomPrefixesToCollection($prefixCollection, $config_user)
+    {
+        foreach ($config_user as $config) {
+            foreach ($config as $prefix) {
+                if (!$name = @$prefix->name) {
+                    throw new \RuntimeException(sprintf("The parameter name on prefix is not defined\n"));
+                }
+                if (!$path = @$prefix->path) {
+                    throw new \RuntimeException(sprintf("The parameter path on prefix is not defined\n"));
+                }
+                $prefixCollection->add(new Prefix(
+                                                    $name,
+                                                    $path
+                                                ));
+            }
+        }
+
+        return $prefixCollection;
     }
 
     /**
@@ -296,45 +467,161 @@ EOT
      *
      * @param $input
      */
-    private function getRepositoriesCollection($input)
+    private function getRepositoriesCollection($input, $config)
     {
+        $repos = $config->repositories->installer;
         $reposCollection = new RepositoryCollection();
-        $reposCollection->add(new Repository('github.com/symfony/symfony.git', 'vendor/symfony'));
-        $reposCollection->add(new Repository('github.com/symfony/zend-log.git', 'vendor/zend-log/Zend/Log'));
+        $reposCollection->add(new Repository(
+                                                $repos->symfony->source,
+                                                $repos->symfony->target,
+                                                $this->typeOfElement($repos->symfony->revision),
+                                                $repos->symfony->revision
+                                            ));
+        $reposCollection->add(new Repository(
+                                                $repos->zendlog->source,
+                                                $repos->zendlog->target,
+                                                $this->typeOfElement($repos->zendlog->revision),
+                                                $repos->zendlog->revision
+                                            ));
         if ($input->getOption('swiftmailer')) {
-            $reposCollection->add(new Repository('github.com/swiftmailer/swiftmailer.git', 'vendor/swiftmailer'));
+            $reposCollection->add(new Repository(
+                                                    $repos->swiftmailer->source,
+                                                    $repos->swiftmailer->target,
+                                                    $this->typeOfElement($repos->swiftmailer->revision),
+                                                    $repos->swiftmailer->revision
+                                                ));
         }
         if ($input->getOption('assetic')) {
-            $reposCollection->add(new Repository('github.com/kriswallsmith/assetic.git', 'vendor/assetic'));
+            $reposCollection->add(new Repository(
+                                                    $repos->assetic->source,
+                                                    $repos->assetic->target,
+                                                    $this->typeOfElement($repos->assetic->revision),
+                                                    $repos->assetic->revision
+                                                ));
         }
         if ('twig' === $input->getOption('template-engine')) {
-            $reposCollection->add(new Repository('github.com/fabpot/Twig.git', 'vendor/twig'));
-            $reposCollection->add(new Repository('github.com/fabpot/Twig-extensions.git', 'vendor/twig-extensions'));
+            $reposCollection->add(new Repository(
+                                                    $repos->twig->source,
+                                                    $repos->twig->target,
+                                                    $this->typeOfElement($repos->twig->revision),
+                                                    $repos->twig->revision
+                                                ));
+            $reposCollection->add(new Repository(
+                                                    $repos->twigextensions->source,
+                                                    $repos->twigextensions->target,
+                                                    $this->typeOfElement($repos->twigextensions->revision),
+                                                    $repos->twigextensions->revision
+                                                ));
         }
         if ('doctrine' === $input->getOption('orm')) {
-            $reposCollection->add(new Repository('github.com/doctrine/doctrine2.git', 'vendor/doctrine'));
-            $reposCollection->add(new Repository('github.com/doctrine/dbal.git', 'vendor/doctrine-dbal'));
+            $reposCollection->add(new Repository(
+                                                    $repos->doctrine->source,
+                                                    $repos->doctrine->target,
+                                                    $this->typeOfElement($repos->doctrine->revision),
+                                                    $repos->doctrine->revision
+                                                ));
+            $reposCollection->add(new Repository(
+                                                    $repos->doctrinedbal->source,
+                                                    $repos->doctrinedbal->target,
+                                                    $this->typeOfElement($repos->doctrinedbal->revision),
+                                                    $repos->doctrinedbal->revision
+                                                ));
             if ($input->getOption('doctrine-fixtures')) {
-                $reposCollection->add(new Repository('github.com/doctrine/data-fixtures.git', 'vendor/doctrine-data-fixtures'));
+                $reposCollection->add(new Repository(
+                                                    $repos->doctrinedatafixtures->source,
+                                                    $repos->doctrinedatafixtures->target,
+                                                    $this->typeOfElement($repos->doctrinedatafixtures->revision),
+                                                    $repos->doctrinedatafixtures->revision
+                                                    ));
             }
             if ($input->getOption('doctrine-migration')) {
-                $reposCollection->add(new Repository('github.com/doctrine/migrations.git', 'vendor/doctrine-migrations'));
+                $reposCollection->add(new Repository(
+                                                    $repos->doctrinemigrations->source,
+                                                    $repos->doctrinemigrations->target,
+                                                    $this->typeOfElement($repos->doctrinemigrations->revision),
+                                                    $repos->doctrinemigrations->revision
+                                                    ));
             }
         }
         if (('doctrine' === $input->getOption('orm')) || ('mongodb' === $input->getOption('odm'))) {
-            $reposCollection->add(new Repository('github.com/doctrine/common.git', 'vendor/doctrine-common'));
+            $reposCollection->add(new Repository(
+                                                    $repos->doctrinecommon->source,
+                                                    $repos->doctrinecommon->target,
+                                                    $this->typeOfElement($repos->doctrinecommon->revision),
+                                                    $repos->doctrinecommon->revision
+                                                ));
         }
         if ('mongodb' === $input->getOption('odm')) {
-            $reposCollection->add(new Repository('github.com/doctrine/mongodb.git', 'vendor/doctrine-mongodb'));
-            $reposCollection->add(new Repository('github.com/doctrine/mongodb-odm.git', 'vendor/doctrine-mongodb-odm'));
+            $reposCollection->add(new Repository(
+                                                    $repos->doctrinemongodb->source,
+                                                    $repos->doctrinemongodb->target,
+                                                    $this->typeOfElement($repos->doctrinemongodb->revision),
+                                                    $repos->doctrinemongodb->revision
+                                                ));
+            $reposCollection->add(new Repository(
+                                                    $repos->doctrinemongodbodm->source,
+                                                    $repos->doctrinemongodbodm->target,
+                                                    $this->typeOfElement($repos->doctrinemongodbodm->revision),
+                                                    $repos->doctrinemongodbodm->revision
+                                                ));
         }
         if ('propel' === $input->getOption('orm')) {
-            $reposCollection->add(new Repository('github.com/willdurand/PropelBundle.git', 'src/Propel/PropelBundle'));
-            $reposCollection->add(new Repository('github.com/KaroDidi/phing.git', 'vendor/phing'));
-            $reposCollection->add(new Repository('github.com/KaroDidi/propel1.6.git', 'vendor/propel'));
+            $reposCollection->add(new Repository(
+                                                    $repos->propelbundle->source,
+                                                    $repos->propelbundle->target,
+                                                    $this->typeOfElement($repos->propelbundle->revision),
+                                                    $repos->propelbundle->revision
+                                                ));
+            $reposCollection->add(new Repository(
+                                                    $repos->phing->source,
+                                                    $repos->phing->target,
+                                                    $this->typeOfElement($repos->phing->revision),
+                                                    $repos->phing->revision
+                                                ));
+            $reposCollection->add(new Repository(
+                                                    $repos->propel->source,
+                                                    $repos->propel->target,
+                                                    $this->typeOfElement($repos->propel->revision),
+                                                    $repos->propel->revision
+                                                ));
+        }
+
+        if ($config_user = $config->repositories->user) {
+            $reposCollection = $this->addCustomRepositoriesToCollection($reposCollection, $config_user);
         }
 
         return $reposCollection->get();
+    }
+
+    /**
+     * Add custom repositories to collection
+     *
+     * @param $reposCollection
+     * @param $custom_config
+     */
+    private function addCustomRepositoriesToCollection($reposCollection, $config_user)
+    {
+        foreach ($config_user as $config) {
+            foreach ($config as $repository) {
+                if (!$source = @$repository->source) {
+                    throw new \RuntimeException(sprintf("The parameter source on repository is not defined\n"));
+                }
+                if (!$target = @$repository->target) {
+                    throw new \RuntimeException(sprintf("The parameter target on repository is not defined\n"));
+                }
+                if (!$revision = @$repository->revision) {
+                    throw new \RuntimeException(sprintf("The parameter revision on repository is not defined\n"));
+                }
+                $reposCollection->add(new Repository(
+                                                        $source,
+                                                        $target,
+                                                        $this->typeOfElement($revision),
+                                                        $revision
+                                                    ));
+            }
+        }
+
+        return $reposCollection;
     }
 
     /**
@@ -346,7 +633,7 @@ EOT
      */
     private function installRepositories($repositories, $input, $output)
     {
-        chdir($input->getArgument('path'));
+        chdir($path = $input->getArgument('path'));
         $output->writeln(' > <info>Git init</info>');
         exec('git init');
         foreach ($repositories as $repository) {
@@ -357,10 +644,25 @@ EOT
                                             );
             $output->writeln(sprintf(' > <info>Git %s</info>', $repository->getSource()));
             exec($gitcommand);
+
+            $targetPath = $path.'/'.$repository->getTarget();
+            chdir($targetPath);
+
+            $output->writeln(sprintf(' > <comment>Git revision %s</comment>', $repository->getRevision()));
+            if ('tag' === $repository->getType()) {
+                $gitcommand = sprintf('git fetch origin tag %s', $repository->getRevision());
+                exec($gitcommand);
+            } else {
+                if ('master' !== $repository->getRevision()) {
+                    $gitcommand = sprintf('git checkout %s', $repository->getRevision());
+                    exec($gitcommand);
+                }
+            }
+
+            chdir($path);
         }
 
         exec('git submodule init');
-        exec('git submodule update');
     }
 
     /**
@@ -407,5 +709,49 @@ EOT
     private function loadConfigFile($file)
     {
         return file_get_contents(__DIR__.'/../Resources/Installer/Config/'.$file.'.txt');
+    }
+
+    /**
+     * Load profile file
+     *
+     * @param $file
+     */
+    private function loadProfileFile($profile)
+    {
+        $file = __DIR__ .sprintf('/../Resources/Profile/%s.xml', $profile);
+
+        if (!function_exists('simplexml_load_file')) {
+            throw new \RuntimeException("The simplexml extension is not installed\n");
+        }
+        if (!file_exists($file)) {
+            throw new \RuntimeException(sprintf("The file %s on path %s does not exist\n",
+                basename($file),
+                dirname($file)
+            ));
+        }
+
+        return simplexml_load_file($file);
+    }
+
+    /**
+     * Get attributes
+     *
+     * @param $element
+     * @param $type
+     */
+    private function typeOfElement($element)
+    {
+        $type = null;
+        foreach ($element->attributes() as $key => $value) {
+            if ('type' === $key) {
+                $type = (string) $value;
+            }
+        }
+        
+        if ((is_null($type)) || (!in_array($type, array('branch', 'tag')))) {
+            throw new \RuntimeException("The type on revision tag is not correct");
+        }
+
+        return $type;
     }
 }
