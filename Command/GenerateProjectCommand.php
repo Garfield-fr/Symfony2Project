@@ -633,7 +633,8 @@ EOT
      */
     private function installRepositories($repositories, $input, $output)
     {
-        chdir($path = $input->getArgument('path'));
+        chdir($input->getArgument('path'));
+        $path = getcwd();
         $output->writeln(' > <info>Git init</info>');
         exec('git init');
         foreach ($repositories as $repository) {
