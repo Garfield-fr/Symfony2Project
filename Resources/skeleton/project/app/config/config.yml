@@ -15,4 +15,5 @@ framework:
 {{ twig }}
 {{ assetic }}
 {{ doctrine }}
+{{ propel }}
 {{ swiftmailer }}

@@ -680,6 +680,7 @@ EOT
         $assetic_config = ($input->getOption('assetic')) ? $this->loadConfigFile('assetic') : '';
         $doctrine_config = ('doctrine' === $input->getOption('orm')) ? $this->loadConfigFile('doctrine') : '';
         $doctrine_config = str_replace('{{ app }}', $input->getArgument('app'), $doctrine_config);
+        $propel_config = ('propel' === $input->getOption('orm')) ? $this->loadConfigFile('propel') : '';
         $swift_config = ($input->getOption('swiftmailer')) ? $this->loadConfigFile('swiftmailer') : '';
         $routing = ($input->getOption('controller')) ? $this->loadConfigFile('routing') : '';
         $routing = str_replace('{{ app }}', $input->getArgument('app'), $routing);
@@ -698,6 +699,7 @@ EOT
             'twig' => $twig_config,
             'assetic' => $assetic_config,
             'doctrine' => $doctrine_config,
+            'propel' => $propel_config,
             'swiftmailer' => $swift_config,
         ));
     }
