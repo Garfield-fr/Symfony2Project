@@ -356,7 +356,7 @@ EOT
         if ('propel' === $input->getOption('orm')) {
             $nsCollection->add(new Nspace(
                                             $ns->propel->name,
-                                            $ns->doctrine->path
+                                            $ns->propel->path
                                         ));
         }
         if ($input->getOption('assetic')) {
