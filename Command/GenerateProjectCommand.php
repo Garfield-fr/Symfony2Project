@@ -83,7 +83,7 @@ EOT
         $repositories = $this->getRepositoriesCollection($input, $config);
         $this->installRepositories($repositories, $input, $output);
         chdir($path);
-        $output->writeln(' > <info>Asset install</info>');
+        $output->writeln(' > <info>Assets install</info>');
         exec('php app/console assets:install --symlink web');
         $output->writeln(sprintf(' > <info>Clear cache and log</info>'));
         $filesystem->remove('app/cache/dev');
