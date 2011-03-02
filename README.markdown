@@ -3,7 +3,7 @@
 
 ##Usage
 
-    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--profile[="..."]] [--template-engine[="..."]] [--force-delete]
+    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--profile[="..."]] [--template-engine[="..."]]  [--assets-symlink] [--force-delete]
 
 ###Arguments
 
@@ -25,6 +25,7 @@
     --doctrine-fixtures    : Enable doctrine fixtures
     --template-engine      : twig or php (default: twig)
     --profile              : Profile name (default: default)
+    --assets-symlink       : Symlink for web assets
     --force-delete         : Force re-generation of project
 
 ###Profile

@@ -47,6 +47,7 @@ class GenerateProjectCommand extends Command
             ->addOption('doctrine-fixtures', null, InputOption::VALUE_NONE, 'Enable doctrine fixtures')
             ->addOption('template-engine', null, InputOption::VALUE_OPTIONAL, 'twig or php', 'twig')
             ->addOption('profile', null, InputOption::VALUE_OPTIONAL, 'Profile name', 'default')
+            ->addOption('assets-symlink', null, InputOption::VALUE_NONE, 'Symlink for web assets')
             ->addOption('force-delete', null, InputOption::VALUE_NONE, 'Force re-generation of project')
             ->setName('generate:project')
             ->setDescription('Generate a Symfony2 project')
@@ -84,7 +85,8 @@ EOT
         $this->installRepositories($repositories, $input, $output);
         chdir($path);
         $output->writeln(' > <info>Assets install</info>');
-        exec('php app/console assets:install --symlink web');
+        $option = ($input->getOption('assets-symlink')) ? ' --symlink' : '';
+        exec(sprintf('php app/console assets:install%s web', $option));
         $output->writeln(sprintf(' > <info>Clear cache and log</info>'));
         $filesystem->remove('app/cache/dev');
         $filesystem->remove('app/logs/dev.log');
