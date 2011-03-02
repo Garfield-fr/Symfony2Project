@@ -64,10 +64,12 @@ EOT
         $filesystem = new Filesystem();
 
         $output->writeln('<info>Initializing Project</info>');
-        $path = $input->getArgument('path');
+        $path = $this->getAbsolutePath($input->getArgument('path'));
         if($input->getOption('force-delete')) {
-            $output->writeln(sprintf('> Remove project on <comment>%s</comment>', $path));
-            $this->removeProject($path, $filesystem);
+            if (is_dir($path)) {
+                $output->writeln(sprintf('> Remove project on <comment>%s</comment>', $path));
+                $this->removeProject($path, $filesystem);
+            }
         }
         $this->checkPathAvailable($path, $filesystem);
 
@@ -80,6 +82,9 @@ EOT
         $this->findAndReplace($input, $bundles, $namespaces, $prefixes);
         $repositories = $this->getRepositoriesCollection($input, $config);
         $this->installRepositories($repositories, $input, $output);
+        chdir($path);
+        $output->writeln(' > <info>Asset install</info>');
+        exec('php app/console assets:install --symlink web');
         $output->writeln(sprintf(' > <info>Clear cache and log</info>'));
         $filesystem->remove('app/cache/dev');
         $filesystem->remove('app/logs/dev.log');
@@ -113,6 +118,16 @@ EOT
      */
     private function removeProject($path, $filesystem)
     {
+        /* Delete symlink */
+        $bundle_path = $path.'/web/bundles';
+        if (is_dir($bundle_path)) {
+            foreach (scandir($bundle_path) as $file) {
+                if ('.' !== substr($file, 0, 1)) {
+                    unlink($bundle_path.'/'.$file);
+                }
+            }
+        }
+
         foreach (array('.git', 'app', 'src', 'vendor', 'web') as $file) {
             $file_path = sprintf('%s/%s', $path, $file);
             if (file_exists($file_path)) {
@@ -143,6 +158,22 @@ EOT
                 throw new \RuntimeException(sprintf('The folder %s contain a symfony project. Use another destination', $path));
             }
         }
+    }
+
+    /**
+     * Get Absolute Path
+     *
+     * @param $path
+     */
+    private function getAbsolutePath($path)
+    {
+        if ('./' === substr($path, 0, 2)) {
+            $path = getcwd().'/'.substr($path, 2);
+        } elseif ('/' !== substr($path, 0, 1)) {
+            $path = getcwd().'/'.$path;
+        }
+
+        return $path;
     }
 
     /**
