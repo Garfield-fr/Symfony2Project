@@ -124,8 +124,9 @@ EOT
         $bundle_path = $path.'/web/bundles';
         if (is_dir($bundle_path)) {
             foreach (scandir($bundle_path) as $file) {
-                if ('.' !== substr($file, 0, 1)) {
-                    unlink($bundle_path.'/'.$file);
+                $file_path = $bundle_path.'/'.$file;
+                if (('.' !== substr($file, 0, 1)) && (is_link($file_path))) {
+                    unlink($file_path);
                 }
             }
         }
