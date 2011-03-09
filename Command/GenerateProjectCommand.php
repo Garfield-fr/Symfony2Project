@@ -84,6 +84,8 @@ EOT
         $repositories = $this->getRepositoriesCollection($input, $config);
         $this->installRepositories($repositories, $input, $output);
         chdir($path);
+        $output->writeln(' > <info>Generate boostrap files</info>');
+        exec('php bin/build_bootstrap.php');
         $output->writeln(' > <info>Assets install</info>');
         $option = ($input->getOption('assets-symlink')) ? ' --symlink' : '';
         exec(sprintf('php app/console assets:install%s web', $option));
