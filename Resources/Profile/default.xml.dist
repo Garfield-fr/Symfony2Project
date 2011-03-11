@@ -88,11 +88,11 @@
         <!-- Add your custom repository here -->
         <!--
         <user>
-            <...>
-                <source>...</source>
-                <target>...</target>
-                <revision type="...">...</revision>
-            </...>
+            <FOSUserBundle>
+                <source>github.com/FriendsOfSymfony/UserBundle.git</source>
+                <target>vendor/Bundles/FOS/UserBundle</target>
+                <revision type="branch">master</revision>
+            </FOSUserBundle>
         </user>
         -->
     </repositories>
@@ -141,10 +141,32 @@
         <!-- Add your custom bundle here -->
         <!--
         <user>
-            <...>
-                <name>...</name>
-                <namespace>...</namespace>
-            </...>
+            <SymfonySecurity>
+                <name>Security</name>
+                <namespace>Symfony\Bundle\SecurityBundle</namespace>
+                <config><![CDATA[
+#Security
+security:
+    providers:
+        fos_userbundle:
+            id: fos_user.user_manager
+    firewalls:
+        main:
+            form_login:
+                provider: fos_userbundle]]></config>
+            </SymfonySecurity>
+            <FOSUserBundle>
+                <name>FOSUser</name>
+                <namespace>FOS\UserBundle</namespace>
+                <config><![CDATA[
+fos_user:
+    db_driver: orm
+    provider_key: fos_userbundle
+    class:
+        model:
+            user: MyProject\MyBundle\Entity\User
+            group: FOS\UserBundle\Entity\DefaultGroup]]></config>
+            </FOSUserBundle>
         </user>
         -->
     </bundles>

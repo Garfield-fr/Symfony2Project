@@ -77,14 +77,18 @@ EOT
         $output->writeln(sprintf('> Generate project on <comment>%s</comment>', $path));
         $this->generateProjectFolder($input, $filesystem);
 
-        $bundles = $this->generateBundlesCollection($input, $config);
-        $namespaces = $this->generateNamespacesCollection($input, $config);
-        $prefixes = $this->generatePrefixesCollection($input, $config);
-        $this->findAndReplace($input, $bundles, $namespaces, $prefixes);
+        $bundlesCollection = $this->generateBundlesCollection($input, $config);
+        $customConfig = $this->generateCustomConfigBundles($bundlesCollection);
+        $bundles = $bundlesCollection->getFormatted(12);
+        $namespacesCollection = $this->generateNamespacesCollection($input, $config);
+        $namespaces = $namespacesCollection->getFormatted(4);
+        $prefixCollection = $this->generatePrefixesCollection($input, $config);
+        $prefixes = $prefixCollection->getFormatted(4);
+        $this->findAndReplace($input, $bundles, $namespaces, $prefixes, $customConfig);
         $repositories = $this->getRepositoriesCollection($input, $config);
         $this->installRepositories($repositories, $input, $output);
         chdir($path);
-        $output->writeln(' > <info>Generate boostrap files</info>');
+        $output->writeln(' > <info>Generate bootstrap files</info>');
         exec('php bin/build_bootstrap.php');
         $output->writeln(' > <info>Assets install</info>');
         $option = ($input->getOption('assets-symlink')) ? ' --symlink' : '';
@@ -303,7 +307,7 @@ EOT
         $vendor = $input->getArgument('vendor');
         $bundlesCollection->add(new Bundle($app, sprintf('%s\%sBundle', $vendor, $app)));
 
-        return $bundlesCollection->getFormatted(12);
+        return $bundlesCollection;
     }
 
     /**
@@ -324,14 +328,31 @@ EOT
                 }
                 $bundlesCollection->add(new Bundle(
                                                     $name,
-                                                    $namespace
+                                                    $namespace,
+                                                    $bundle->config
                                                 ));
             }
         }
 
         return $bundlesCollection;
     }
-    
+
+    /**
+     * Generate Custom Bundle Configuration
+     * @param $bundlesCollection
+     */
+    private function generateCustomConfigBundles($bundles)
+    {
+        $custom = '';
+        foreach ($bundles->getCollection() as $bundle) {
+            if (null !== $bundle->getConfig()) {
+                $custom .= $bundle->getConfig() ."\n";
+            }
+        }
+
+        return $custom;
+    }
+
     /**
      * Generate Namespace collection
      *
@@ -410,7 +431,7 @@ EOT
             $nsCollection = $this->addCustomNamespacesToCollection($nsCollection, $config_user);
         }
         
-        return $nsCollection->getFormatted(4);
+        return $nsCollection;
     }
 
     /**
@@ -469,7 +490,7 @@ EOT
             $prefixCollection = $this->addCustomPrefixesToCollection($prefixCollection, $config_user);
         }
 
-        return $prefixCollection->getFormatted(4);
+        return $prefixCollection;
     }
 
     /**
@@ -710,7 +731,7 @@ EOT
      * @param $registerNamespaces
      * @param $registerPrefixes
      */
-    private function findAndReplace($input, $bundles, $registerNamespaces, $registerPrefixes)
+    private function findAndReplace($input, $bundles, $registerNamespaces, $registerPrefixes, $customConfig)
     {
         $twig_config = ('twig' === $input->getOption('template-engine')) ? $this->loadConfigFile('twig') : '';
         $assetic_config = ($input->getOption('assetic')) ? $this->loadConfigFile('assetic') : '';
@@ -737,6 +758,7 @@ EOT
             'doctrine' => $doctrine_config,
             'propel' => $propel_config,
             'swiftmailer' => $swift_config,
+            'custom' => $customConfig
         ));
     }
 

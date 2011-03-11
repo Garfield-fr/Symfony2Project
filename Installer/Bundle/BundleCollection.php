@@ -16,7 +16,12 @@ class BundleCollection
     {
         $this->collection[] = $bundle;
     }
-    
+
+    public function getCollection()
+    {
+        return $this->collection;
+    }
+
     public function getFormatted($space = 4)
     {
         $bundles = '';
