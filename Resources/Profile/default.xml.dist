@@ -90,7 +90,7 @@
         <user>
             <FOSUserBundle>
                 <source>github.com/FriendsOfSymfony/UserBundle.git</source>
-                <target>vendor/Bundles/FOS/UserBundle</target>
+                <target>vendor/bundles/FOS/UserBundle</target>
                 <revision type="branch">master</revision>
             </FOSUserBundle>
         </user>
