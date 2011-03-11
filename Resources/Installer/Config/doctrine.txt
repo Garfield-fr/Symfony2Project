@@ -2,11 +2,18 @@
 ## Doctrine Configuration
 #doctrine:
 #   dbal:
-#       dbname:   xxxxxxxx
-#       user:     xxxxxxxx
-#       password: ~
-#       logging:  %kernel.debug%
+#       default_connection:       default
+#       connections:
+#           default:
+#               dbname:   xxxxxxxx
+#               user:     xxxxxxxx
+#               password: ~
+#               logging:  %kernel.debug%
 #   orm:
 #       auto_generate_proxy_classes: %kernel.debug%
-#       mappings:
-#           {{ app }}Bundle: ~
+#       default_entity_manager:   default
+#       entity_managers:
+#           default:
+#               connection: default
+#               mappings:
+#                   {{ app }}Bundle: ~
