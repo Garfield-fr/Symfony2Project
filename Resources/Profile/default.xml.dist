@@ -223,10 +223,10 @@ fos_user:
         <!-- Add your custom namespace here -->
         <!--
         <user>
-            <...>
-                <name>...</name>
-                <path>...</path>
-            </...>
+            <FOSUserBundle>
+                <name>FOS</name>
+                <path>vendor/bundles</path>
+            </FOSUserBundle>
         </user>
         -->
     </namespaces>
