@@ -370,6 +370,12 @@ EOT
                                         $input->getArgument('vendor'),
                                         'src'
                                     ));
+        if (('doctrine' === $input->getOption('orm')) || ('mongodb' === $input->getOption('odm'))) {
+            $nsCollection->add(new Nspace(
+                                            $ns->doctrinecommon->name,
+                                            $ns->doctrinecommon->path
+                                        ));
+	}
         if ('doctrine' === $input->getOption('orm')) {
             if ($input->getOption('doctrine-fixtures')) {
                 $nsCollection->add(new Nspace(
@@ -377,10 +383,6 @@ EOT
                                                 $ns->doctrinedatafixtures->path
                                             ));
             }
-            $nsCollection->add(new Nspace(
-                                            $ns->doctrinecommon->name,
-                                            $ns->doctrinecommon->path
-                                        ));
             if ($input->getOption('doctrine-migration')) {
                 $nsCollection->add(new Nspace(
                                                 $ns->doctrinemigrations->name,
@@ -389,10 +391,6 @@ EOT
             }
         }
         if ('mongodb' === $input->getOption('odm')) {
-            $nsCollection->add(new Nspace(
-                                            $ns->doctrinecommon->name,
-                                            $ns->doctrinecommon->path
-                                        ));
             $nsCollection->add(new Nspace(
                                             $ns->doctrinemongodb->name,
                                             $ns->doctrinemongodb->path
@@ -407,8 +405,6 @@ EOT
                                             $ns->doctrinedbal->name,
                                             $ns->doctrinedbal->path
                                         ));
-        }
-        if ('doctrine' === $input->getOption('orm')) {
             $nsCollection->add(new Nspace(
                                             $ns->doctrine->name,
                                             $ns->doctrine->path
