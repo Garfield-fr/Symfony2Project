@@ -3,7 +3,10 @@
 
 ##Usage
 
-    symfony2project generate:project AppName VendorName Path [--controller[="..."]] [--protocol[="..."]] [--session-start[="..."]] [--session-name[="..."]] [--orm[="..."]] [--odm[="..."]] [--assetic] [--swiftmailer] [--doctrine-migration] [--doctrine-fixtures] [--profile[="..."]] [--template-engine[="..."]]  [--assets-symlink] [--force-delete]
+    symfony2project generate:project AppName VendorName Path [--controller="..."] [--protocol="..."]
+    [--session-start] [--session-name="..."] [--orm="..."] [--odm="..."] [--assetic] [--swiftmailer]
+    [--doctrine-migration] [--doctrine-fixtures] [--template-engine="..."] [--profile="..."]
+    [--assets-symlink] [--force-delete]
 
 ###Arguments
 
