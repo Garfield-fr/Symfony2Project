@@ -74,12 +74,12 @@
                 <revision type="branch">master</revision>
             </propelbundle>
             <phing>
-                <source>github.com/KaroDidi/phing.git</source>
+                <source>github.com/Xosofox/phing.git</source>
                 <target>vendor/phing</target>
                 <revision type="branch">master</revision>
             </phing>
             <propel>
-                <source>github.com/KaroDidi/propel1.6.git</source>
+                <source>github.com/Xosofox/propel1.6.git</source>
                 <target>vendor/propel</target>
                 <revision type="branch">master</revision>
             </propel>
