@@ -1,3 +1,3 @@
-<?php $view->extend('{{ appname }}Bundle::layout.html.php') ?>
+<?php $view->extend('{{ appname }}::layout.html.php') ?>
 
 {{ appname }}!
