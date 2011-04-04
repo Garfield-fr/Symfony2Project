@@ -8,11 +8,11 @@
                 <target>vendor/symfony</target>
                 <revision type="branch">master</revision>
             </symfony>
-            <zendlog>
-                <source>github.com/symfony/zend-log.git</source>
-                <target>vendor/zend-log/Zend/Log</target>
+            <monolog>
+                <source>github.com/Seldaek/monolog.git</source>
+                <target>vendor/monolog</target>
                 <revision type="branch">master</revision>
-            </zendlog>
+            </monolog>
             <swiftmailer>
                 <source>github.com/swiftmailer/swiftmailer.git</source>
                 <target>vendor/swiftmailer</target>
@@ -104,10 +104,10 @@
                 <name>Framework</name>
                 <namespace>Symfony\Bundle\FrameworkBundle</namespace>
             </framework>
-            <zend>
-                <name>Zend</name>
-                <namespace>Symfony\Bundle\ZendBundle</namespace>
-            </zend>
+            <monolog>
+                <name>Monolog</name>
+                <namespace>Symfony\Bundle\MonologBundle</namespace>
+            </monolog>
             <twig>
                 <name>Twig</name>
                 <namespace>Symfony\Bundle\TwigBundle</namespace>
@@ -214,10 +214,10 @@ fos_user:
                 <name>Assetic</name>
                 <path>vendor/assetic/src</path>
             </assetic>
-            <zendlog>
-                <name>Zend\Log</name>
-                <path>vendor/zend-log</path>
-            </zendlog>
+            <monolog>
+                <name>Monolog</name>
+                <path>vendor/monolog/src</path>
+            </monolog>
         </installer>
         
         <!-- Add your custom namespace here -->

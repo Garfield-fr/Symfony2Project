@@ -251,8 +251,8 @@ EOT
                                             $bundles->framework->namespace
                                         ));
         $bundlesCollection->add(new Bundle(
-                                            $bundles->zend->name,
-                                            $bundles->zend->namespace
+                                            $bundles->monolog->name,
+                                            $bundles->monolog->namespace
                                         ));
         if ('twig' === $input->getOption('template-engine')) {
             $bundlesCollection->add(new Bundle(
@@ -423,8 +423,8 @@ EOT
                                         ));
         }
         $nsCollection->add(new Nspace(
-                                        $ns->zendlog->name,
-                                        $ns->zendlog->path
+                                        $ns->monolog->name,
+                                        $ns->monolog->path
                                     ));
 
         if ($config_user = $config->namespaces->user) {
@@ -535,10 +535,10 @@ EOT
                                                 $repos->symfony->revision
                                             ));
         $reposCollection->add(new Repository(
-                                                $repos->zendlog->source,
-                                                $repos->zendlog->target,
-                                                $this->typeOfElement($repos->zendlog->revision),
-                                                $repos->zendlog->revision
+                                                $repos->monolog->source,
+                                                $repos->monolog->target,
+                                                $this->typeOfElement($repos->monolog->revision),
+                                                $repos->monolog->revision
                                             ));
         if ($input->getOption('swiftmailer')) {
             $reposCollection->add(new Repository(

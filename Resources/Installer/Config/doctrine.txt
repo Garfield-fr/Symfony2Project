@@ -16,4 +16,4 @@
 #           default:
 #               connection: default
 #               mappings:
-#                   {{ app }}: ~
+#                   {{ app }}Bundle: ~
