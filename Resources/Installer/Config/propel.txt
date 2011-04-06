@@ -3,9 +3,9 @@
 propel:
     path:       "%kernel.root_dir%/../vendor/propel"
     phing_path: "%kernel.root_dir%/../vendor/phing"
-#    dbal:
-#        driver:               mysql
-#        options:              {}
-#        user:                 xxxxxxxx
-#        password:             xxxxxxxx
-#        dsn:                  mysql:host=localhost;dbname=xxxxxxx
+    dbal:
+        driver:               mysql
+        options:              {}
+        user:                 xxxxxxxx
+        password:             xxxxxxxx
+        dsn:                  mysql:host=localhost;dbname=xxxxxxx
