@@ -737,7 +737,10 @@ EOT
         $twig_config = ('twig' === $input->getOption('template-engine')) ? $this->loadConfigFile('twig') : '';
         $assetic_config = ($input->getOption('assetic')) ? $this->loadConfigFile('assetic') : '';
         $doctrine_config = ('doctrine' === $input->getOption('orm')) ? $this->loadConfigFile('doctrine') : '';
-        $doctrine_config = str_replace('{{ app }}', $input->getArgument('app'), $doctrine_config);
+        $doctrine_config = str_replace(
+            array('{{ app }}', '{{ namespace }}'), 
+            array($input->getArgument('app'), $input->getArgument('vendor')),
+            $doctrine_config);
         $propel_config = ('propel' === $input->getOption('orm')) ? $this->loadConfigFile('propel') : '';
         $swift_config = ($input->getOption('swiftmailer')) ? $this->loadConfigFile('swiftmailer') : '';
         $routing = ($input->getOption('controller')) ? $this->loadConfigFile('routing') : '';
