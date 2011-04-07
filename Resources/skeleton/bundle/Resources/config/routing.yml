@@ -1,7 +1,7 @@
 homepage:
     pattern:  /
-    defaults: { _controller: {{ appname }}Bundle:{{ controller }}:welcome }
+    defaults: { _controller: {{ namespace }}{{ appname }}Bundle:{{ controller }}:welcome }
 
 {{ appname }}:
     pattern:  /{{ controller }}
-    defaults: { _controller: {{ appname }}Bundle:{{ controller }}:index }
+    defaults: { _controller: {{ namespace }}{{ appname }}Bundle:{{ controller }}:index }

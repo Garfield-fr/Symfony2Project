@@ -8,11 +8,11 @@ class {{ controller }}Controller extends Controller
 {
     public function indexAction()
     {
-        return $this->render('{{ appname }}Bundle:{{ controller }}:index.html.{{ template_engine }}');
+        return $this->render('{{ namespace }}{{ appname }}Bundle:{{ controller }}:index.html.{{ template_engine }}');
     }
     
     public function welcomeAction()
     {
-        return $this->render('{{ appname }}Bundle:{{ controller }}:welcome.html.{{ template_engine }}');
+        return $this->render('{{ namespace }}{{ appname }}Bundle:{{ controller }}:welcome.html.{{ template_engine }}');
     }
 }
