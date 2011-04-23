@@ -48,11 +48,21 @@
                 <target>vendor/doctrine-data-fixtures</target>
                 <revision type="branch">master</revision>
             </doctrinedatafixtures>
+            <doctrinedatafixturesbundle>
+                <source>github.com/symfony/DoctrineFixturesBundle.git</source>
+                <target>vendor/bundles/Symfony/Bundle/DoctrineFixturesBundle</target>
+                <revision type="branch">master</revision>
+            </doctrinedatafixturesbundle>
             <doctrinemigrations>
                 <source>github.com/doctrine/migrations.git</source>
                 <target>vendor/doctrine-migrations</target>
                 <revision type="branch">master</revision>
             </doctrinemigrations>
+            <doctrinemigrationsbundle>
+                <source>github.com/symfony/DoctrineMigrationsBundle.git</source>
+                <target>vendor/bundles/Symfony/Bundle/DoctrineMigrationsBundle</target>
+                <revision type="branch">master</revision>
+            </doctrinemigrationsbundle>
             <doctrinecommon>
                 <source>github.com/doctrine/common.git</source>
                 <target>vendor/doctrine-common</target>
@@ -128,6 +138,10 @@
                 <name>DoctrineMigrations</name>
                 <namespace>Symfony\Bundle\DoctrineMigrationsBundle</namespace>
             </doctrinemigrations>
+            <doctrinefixtures>
+                <name>DoctrineFixtures</name>
+                <namespace>Symfony\Bundle\DoctrineFixturesBundle</namespace>
+            </doctrinefixtures>
             <propel>
                 <name>Propel</name>
                 <namespace>Propel\PropelBundle</namespace>
@@ -177,6 +191,7 @@ fos_user:
             <symfony>
                 <name>Symfony</name>
                 <path>vendor/symfony/src</path>
+                <path>vendor/bundles</path>
             </symfony>
             <doctrinedatafixtures>
                 <name>Doctrine\Common\DataFixtures</name>

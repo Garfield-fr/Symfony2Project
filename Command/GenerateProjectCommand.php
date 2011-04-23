@@ -111,10 +111,10 @@ EOT
     private function checkOptionParameters($input)
     {
         if (!in_array($input->getOption('protocol'), array('git', 'http'))) {
-            throw new \RuntimeException('Protocol error. Values accepted: git or http');
+            throw new \RuntimeException('Protocol error. Values accepted: git or http.');
         }
         if (!in_array($input->getOption('template-engine'), array('twig', 'php'))) {
-            throw new \RuntimeException('Template engine error. Values accepted: twig or php');
+            throw new \RuntimeException('Template engine error. Values accepted: twig or php.');
         }
     }
 
@@ -158,13 +158,13 @@ EOT
         }
 
         if (!is_writable($path)) {
-            throw new \RuntimeException(sprintf("The path %s is not writable\n", $path));
+            throw new \RuntimeException(sprintf("The path %s is not writable.", $path));
         }
 
         $files = scandir($path);
         foreach (array('.git', 'app', 'src', 'vendor', 'web') as $file) {
             if (in_array($file, $files)) {
-                throw new \RuntimeException(sprintf('The folder %s contain a symfony project. Use another destination', $path));
+                throw new \RuntimeException(sprintf('The folder %s contain a symfony project. Use another destination.', $path));
             }
         }
     }
@@ -285,6 +285,12 @@ EOT
                                                         $bundles->doctrinemigrations->namespace
                                                     ));
                 }
+                if ($input->getOption('doctrine-fixtures')) {
+                    $bundlesCollection->add(new Bundle(
+                                                        $bundles->doctrinefixtures->name,
+                                                        $bundles->doctrinefixtures->namespace
+                                                    ));
+                }
             }
             if ('propel' === $input->getOption('orm')) {
                 $bundlesCollection->add(new Bundle(
@@ -322,10 +328,10 @@ EOT
         foreach ($config_user as $config) {
             foreach ($config as $bundle) {
                 if (!$name = @$bundle->name) {
-                    throw new \RuntimeException(sprintf("The parameter name on bundle is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter name on bundle is not defined."));
                 }
                 if (!$namespace = @$bundle->namespace) {
-                    throw new \RuntimeException(sprintf("The parameter namespace on bundle is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter namespace on bundle is not defined."));
                 }
                 $bundlesCollection->add(new Bundle(
                                                     $name,
@@ -363,9 +369,10 @@ EOT
     {
         $ns = $config->namespaces->installer;
         $nsCollection = new NspaceCollection();
+
         $nsCollection->add(new Nspace(
                                         $ns->symfony->name,
-                                        $ns->symfony->path
+                                        $this->extractPath($ns->symfony->path)
                                     ));
         $nsCollection->add(new Nspace(
                                         $input->getArgument('vendor'),
@@ -374,64 +381,64 @@ EOT
         if (('doctrine' === $input->getOption('orm')) || ('mongodb' === $input->getOption('odm'))) {
             $nsCollection->add(new Nspace(
                                             $ns->doctrinecommon->name,
-                                            $ns->doctrinecommon->path
+                                            $this->extractPath($ns->doctrinecommon->path)
                                         ));
-	}
+            }
         if ('doctrine' === $input->getOption('orm')) {
             if ($input->getOption('doctrine-fixtures')) {
                 $nsCollection->add(new Nspace(
                                                 $ns->doctrinedatafixtures->name,
-                                                $ns->doctrinedatafixtures->path
+                                                $this->extractPath($ns->doctrinedatafixtures->path)
                                             ));
             }
             if ($input->getOption('doctrine-migration')) {
                 $nsCollection->add(new Nspace(
                                                 $ns->doctrinemigrations->name,
-                                                $ns->doctrinemigrations->path
+                                                $this->extractPath($ns->doctrinemigrations->path)
                                             ));
             }
         }
         if ('mongodb' === $input->getOption('odm')) {
             $nsCollection->add(new Nspace(
                                             $ns->doctrinemongodb->name,
-                                            $ns->doctrinemongodb->path
+                                            $this->extractPath($ns->doctrinemongodb->path)
                                         ));
             $nsCollection->add(new Nspace(
                                             $ns->doctrinemongodbodm->name,
-                                            $ns->doctrinemongodbodm->path
+                                            $this->extractPath($ns->doctrinemongodbodm->path)
                                         ));
         }
         if ('doctrine' === $input->getOption('orm')) {
             $nsCollection->add(new Nspace(
                                             $ns->doctrinedbal->name,
-                                            $ns->doctrinedbal->path
+                                            $this->extractPath($ns->doctrinedbal->path)
                                         ));
             $nsCollection->add(new Nspace(
                                             $ns->doctrine->name,
-                                            $ns->doctrine->path
+                                            $this->extractPath($ns->doctrine->path)
                                         ));
         }
         if ('propel' === $input->getOption('orm')) {
             $nsCollection->add(new Nspace(
                                             $ns->propel->name,
-                                            $ns->propel->path
+                                            $this->extractPath($ns->propel->path)
                                         ));
         }
         if ($input->getOption('assetic')) {
             $nsCollection->add(new Nspace(
                                             $ns->assetic->name,
-                                            $ns->assetic->path
+                                            $this->extractPath($ns->assetic->path)
                                         ));
         }
         $nsCollection->add(new Nspace(
                                         $ns->monolog->name,
-                                        $ns->monolog->path
+                                        $this->extractPath($ns->monolog->path)
                                     ));
 
         if ($config_user = $config->namespaces->user) {
             $nsCollection = $this->addCustomNamespacesToCollection($nsCollection, $config_user);
         }
-        
+
         return $nsCollection;
     }
 
@@ -446,14 +453,14 @@ EOT
         foreach ($config_user as $config) {
             foreach ($config as $namespace) {
                 if (!$name = @$namespace->name) {
-                    throw new \RuntimeException(sprintf("The parameter name on namespace is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter name on namespace is not defined."));
                 }
                 if (!$path = @$namespace->path) {
-                    throw new \RuntimeException(sprintf("The parameter path on namespace is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter path on namespace is not defined."));
                 }
                 $nsCollection->add(new Nspace(
                                                 $name,
-                                                $path
+                                                $this->extractPath($path)
                                             ));
             }
         }
@@ -505,10 +512,10 @@ EOT
         foreach ($config_user as $config) {
             foreach ($config as $prefix) {
                 if (!$name = @$prefix->name) {
-                    throw new \RuntimeException(sprintf("The parameter name on prefix is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter name on prefix is not defined."));
                 }
                 if (!$path = @$prefix->path) {
-                    throw new \RuntimeException(sprintf("The parameter path on prefix is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter path on prefix is not defined."));
                 }
                 $prefixCollection->add(new Prefix(
                                                     $name,
@@ -591,6 +598,12 @@ EOT
                                                     $this->typeOfElement($repos->doctrinedatafixtures->revision),
                                                     $repos->doctrinedatafixtures->revision
                                                     ));
+                $reposCollection->add(new Repository(
+                                                    $repos->doctrinedatafixturesbundle->source,
+                                                    $repos->doctrinedatafixturesbundle->target,
+                                                    $this->typeOfElement($repos->doctrinedatafixturesbundle->revision),
+                                                    $repos->doctrinedatafixturesbundle->revision
+                                                    ));
             }
             if ($input->getOption('doctrine-migration')) {
                 $reposCollection->add(new Repository(
@@ -598,6 +611,12 @@ EOT
                                                     $repos->doctrinemigrations->target,
                                                     $this->typeOfElement($repos->doctrinemigrations->revision),
                                                     $repos->doctrinemigrations->revision
+                                                    ));
+                $reposCollection->add(new Repository(
+                                                    $repos->doctrinemigrationsbundle->source,
+                                                    $repos->doctrinemigrationsbundle->target,
+                                                    $this->typeOfElement($repos->doctrinemigrationsbundle->revision),
+                                                    $repos->doctrinemigrationsbundle->revision
                                                     ));
             }
         }
@@ -621,6 +640,12 @@ EOT
                                                     $repos->doctrinemongodbodm->target,
                                                     $this->typeOfElement($repos->doctrinemongodbodm->revision),
                                                     $repos->doctrinemongodbodm->revision
+                                                ));
+            $reposCollection->add(new Repository(
+                                                    $repos->doctrinemongodbbundle->source,
+                                                    $repos->doctrinemongodbbundle->target,
+                                                    $this->typeOfElement($repos->doctrinemongodbbundle->revision),
+                                                    $repos->doctrinemongodbbundle->revision
                                                 ));
         }
         if ('propel' === $input->getOption('orm')) {
@@ -662,13 +687,13 @@ EOT
         foreach ($config_user as $config) {
             foreach ($config as $repository) {
                 if (!$source = @$repository->source) {
-                    throw new \RuntimeException(sprintf("The parameter source on repository is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter source on repository is not defined."));
                 }
                 if (!$target = @$repository->target) {
-                    throw new \RuntimeException(sprintf("The parameter target on repository is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter target on repository is not defined."));
                 }
                 if (!$revision = @$repository->revision) {
-                    throw new \RuntimeException(sprintf("The parameter revision on repository is not defined\n"));
+                    throw new \RuntimeException(sprintf("The parameter revision on repository is not defined."));
                 }
                 $reposCollection->add(new Repository(
                                                         $source,
@@ -789,16 +814,21 @@ EOT
         $file = __DIR__ .sprintf('/../Resources/Profile/%s.xml', $profile);
 
         if (!function_exists('simplexml_load_file')) {
-            throw new \RuntimeException("The simplexml extension is not installed\n");
+            throw new \RuntimeException("The simplexml extension is not installed.");
         }
         if (!file_exists($file)) {
-            throw new \RuntimeException(sprintf("The file %s on path %s does not exist\n",
+            throw new \RuntimeException(sprintf("The file %s on path %s does not exist.",
                 basename($file),
                 dirname($file)
             ));
         }
 
-        return simplexml_load_file($file);
+        $xml = simplexml_load_file($file);
+        if (!$xml) {
+            throw new \RuntimeException(sprintf('Parser error. Check your profile xml file "%s".', basename($file)));
+        }
+
+        return $xml;
     }
 
     /**
@@ -809,17 +839,35 @@ EOT
      */
     private function typeOfElement($element)
     {
-        $type = null;
+        if (!$element) {
+            throw new \RuntimeException("Missing tag revision on repository. Check your xml profile (Section: repositories).");
+        }
+
         foreach ($element->attributes() as $key => $value) {
             if ('type' === $key) {
                 $type = (string) $value;
             }
         }
-        
+
         if ((is_null($type)) || (!in_array($type, array('branch', 'tag')))) {
-            throw new \RuntimeException("The type on revision tag is not correct");
+            throw new \RuntimeException("The type on revision tag is not correct.");
         }
 
         return $type;
+    }
+
+    /**
+     * Extract Path
+     *
+     * @param $path
+     */
+    private function extractPath($path)
+    {
+        $_path = array();
+        foreach ($path as $p) {
+            $_path[] = $p;
+        }
+
+        return $_path;
     }
 }
