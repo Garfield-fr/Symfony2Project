@@ -778,6 +778,7 @@ EOT
             'namespace' => $input->getArgument('vendor'),
             'appname' => $input->getArgument('app'),
             'controller' => $input->getOption('controller'),
+            'csrf' => $this->generateCsrf(),
             'session_start' => $input->getOption('session-start') ? 'true' : 'false',
             'session_name'  => $input->getOption('session-name'),
             'template_engine' => $input->getOption('template-engine'),
@@ -869,5 +870,21 @@ EOT
         }
 
         return $_path;
+    }
+
+    /**
+     * Generate a random csrf
+     *
+     */
+    private function generateCsrf()
+    {
+        $csrf = '';
+        $alphanum = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        $length = strlen($alphanum);
+        for($a = 0; $a < 32; $a++) {
+            $csrf .= substr($alphanum, rand(0, $length-1), 1);
+        }
+
+        return $csrf;
     }
 }
