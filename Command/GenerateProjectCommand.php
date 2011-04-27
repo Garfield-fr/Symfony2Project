@@ -761,6 +761,7 @@ EOT
     {
         $twig_config = ('twig' === $input->getOption('template-engine')) ? $this->loadConfigFile('twig') : '';
         $assetic_config = ($input->getOption('assetic')) ? $this->loadConfigFile('assetic') : '';
+        $assetic_dev_config = ($input->getOption('assetic')) ? $this->loadConfigFile('assetic_dev') : '';
         $doctrine_config = ('doctrine' === $input->getOption('orm')) ? $this->loadConfigFile('doctrine') : '';
         $doctrine_config = str_replace(
             array('{{ app }}', '{{ namespace }}'), 
@@ -788,6 +789,7 @@ EOT
             'registerPrefixes' => $registerPrefixes,
             'twig' => $twig_config,
             'assetic' => $assetic_config,
+            'assetic_dev' => $assetic_dev_config,
             'doctrine' => $doctrine_config,
             'propel' => $propel_config,
             'swiftmailer' => $swift_config,
