@@ -27,7 +27,7 @@
     --doctrine-migration   : Enable doctrine migration
     --doctrine-fixtures    : Enable doctrine fixtures
     --template-engine      : twig or php (default: twig)
-    --profile              : Profile name (default: default)
+    --profile              : Profile name (default: default) or http url
     --assets-symlink       : Symlink for web assets
     --force-delete         : Force re-generation of project
 
@@ -40,5 +40,6 @@
     
     You can also create new profile, copy the file default.xml.dist, rename (ex: foo.xml) and use --profile=foo on command line.
 
+    http server example: http://myserver/profile/default (not with xml)
 
 *Note: only tested on unix system.*

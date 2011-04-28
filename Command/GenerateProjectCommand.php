@@ -814,21 +814,29 @@ EOT
      */
     private function loadProfileFile($profile)
     {
-        $file = __DIR__ .sprintf('/../Resources/Profile/%s.xml', $profile);
-
         if (!function_exists('simplexml_load_file')) {
             throw new \RuntimeException("The simplexml extension is not installed.");
         }
-        if (!file_exists($file)) {
-            throw new \RuntimeException(sprintf("The file %s on path %s does not exist.",
-                basename($file),
-                dirname($file)
-            ));
+
+        $profile .= '.xml';
+        if (preg_match('/http:\/\//', $profile)) {
+            $headers = get_headers($profile);
+            if (strpos($headers[0], 'OK') == 0) {
+                throw new \RuntimeException("HTTP profile not found");
+            }
+        } else {
+            $profile = __DIR__ .sprintf('/../Resources/Profile/%s', $profile);
+            if (!file_exists($profile)) {
+                throw new \RuntimeException(sprintf("The file %s on path %s does not exist.",
+                    basename($profile),
+                    dirname($profile)
+                ));
+            }
         }
 
-        $xml = simplexml_load_file($file);
+        $xml = simplexml_load_file($profile);
         if (!$xml) {
-            throw new \RuntimeException(sprintf('Parser error. Check your profile xml file "%s".', basename($file)));
+            throw new \RuntimeException(sprintf('Parser error. Check your profile xml file "%s".', basename($profile)));
         }
 
         return $xml;
