@@ -1,9 +1,9 @@
 framework:
+    secret:  {{ secret }}
     charset:       UTF-8
     error_handler: null
     csrf_protection:
         enabled: true
-        secret:  {{ csrf }}
     router:        { resource: "%kernel.root_dir%/config/routing.yml" }
     validation:    { enabled: true, annotations: true }
     templating:    { engines: ['{{ template_engine }}'] } #assets_version: SomeVersionScheme

@@ -779,7 +779,7 @@ EOT
             'namespace' => $input->getArgument('vendor'),
             'appname' => $input->getArgument('app'),
             'controller' => $input->getOption('controller'),
-            'csrf' => $this->generateCsrf(),
+            'secret' => $this->generateSecret(),
             'session_start' => $input->getOption('session-start') ? 'true' : 'false',
             'session_name'  => $input->getOption('session-name'),
             'template_engine' => $input->getOption('template-engine'),
@@ -875,18 +875,18 @@ EOT
     }
 
     /**
-     * Generate a random csrf
+     * Generate a random secret framework
      *
      */
-    private function generateCsrf()
+    private function generateSecret()
     {
-        $csrf = '';
+        $secret = '';
         $alphanum = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         $length = strlen($alphanum);
         for($a = 0; $a < 32; $a++) {
-            $csrf .= substr($alphanum, rand(0, $length-1), 1);
+            $secret .= substr($alphanum, rand(0, $length-1), 1);
         }
 
-        return $csrf;
+        return $secret;
     }
 }
