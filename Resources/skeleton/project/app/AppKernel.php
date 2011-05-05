@@ -2,6 +2,8 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\ClassLoader\DebugUniversalClassLoader;
+use Symfony\Component\HttpKernel\Debug\ErrorHandler;
 
 class AppKernel extends Kernel
 {
@@ -18,9 +20,17 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
-    public function registerRootDir()
+    public function init()
     {
-        return __DIR__;
+        if ($this->debug) {
+            ini_set('display_errors', 1);
+            error_reporting(-1);
+
+            DebugUniversalClassLoader::enable();
+            ErrorHandler::register();
+        } else {
+            ini_set('display_errors', 0);
+        }
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
