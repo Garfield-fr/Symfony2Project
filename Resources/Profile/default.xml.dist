@@ -78,6 +78,11 @@
                 <target>vendor/doctrine-mongodb-odm</target>
                 <revision type="branch">master</revision>
             </doctrinemongodbodm>
+            <doctrinemongodbbundle>
+                <source>github.com/symfony/DoctrineMongoDBBundle.git</source>
+                <target>vendor/bundles/Symfony/Bundle/DoctrineMongoDBBundle</target>
+                <revision type="branch">master</revision>
+            </doctrinemongodbbundle>
             <propelbundle>
                 <source>github.com/willdurand/PropelBundle.git</source>
                 <target>src/Propel/PropelBundle</target>
