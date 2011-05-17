@@ -36,12 +36,12 @@
             <doctrine>
                 <source>github.com/doctrine/doctrine2.git</source>
                 <target>vendor/doctrine</target>
-                <revision type="tag">2.0.4</revision>
+                <revision type="tag">2.0.5</revision>
             </doctrine>
             <doctrinedbal>
                 <source>github.com/doctrine/dbal.git</source>
                 <target>vendor/doctrine-dbal</target>
-                <revision type="tag">2.0.4</revision>
+                <revision type="tag">2.0.5</revision>
             </doctrinedbal>
             <doctrinedatafixtures>
                 <source>github.com/doctrine/data-fixtures.git</source>
