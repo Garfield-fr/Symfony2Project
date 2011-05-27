@@ -18,6 +18,7 @@ use Installer\Prefix\Prefix;
 use Installer\Prefix\PrefixCollection;
 use Installer\Repository\Repository;
 use Installer\Repository\RepositoryCollection;
+use Installer\Tool\Tool;
 
 /**
  * GenerateProjectCommand
@@ -225,7 +226,7 @@ EOT
         $filesystem->remove($targetBundleDir.'/Resources/Views/layout.html.'.$extension);
         $filesystem->remove($targetBundleDir.'/Resources/Views/'.$controller.'/index.html.'.$extension);
         $filesystem->remove($targetBundleDir.'/Resources/Views/'.$controller.'/welcome.html.'.$extension);
-        $filesystem->remove($path.'/app/Views/base.html.'.$extension);
+        $filesystem->remove($path.'/app/Resources/views/base.html.'.$extension);
 
         /* create empty folder */
         $filesystem->mkdirs($path.'/app/cache', 0777);
@@ -779,7 +780,7 @@ EOT
             'namespace' => $input->getArgument('vendor'),
             'appname' => $input->getArgument('app'),
             'controller' => $input->getOption('controller'),
-            'secret' => $this->generateSecret(),
+            'secret' => Tool::generateSecret(),
             'session_start' => $input->getOption('session-start') ? 'true' : 'false',
             'session_name'  => $input->getOption('session-name'),
             'template_engine' => $input->getOption('template-engine'),
@@ -880,21 +881,5 @@ EOT
         }
 
         return $_path;
-    }
-
-    /**
-     * Generate a random secret framework
-     *
-     */
-    private function generateSecret()
-    {
-        $secret = '';
-        $alphanum = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        $length = strlen($alphanum);
-        for($a = 0; $a < 32; $a++) {
-            $secret .= substr($alphanum, rand(0, $length-1), 1);
-        }
-
-        return $secret;
     }
 }
