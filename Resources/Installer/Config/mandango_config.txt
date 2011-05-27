@@ -1,0 +1,8 @@
+
+# Mandango configuration
+mandango:
+    default_connection: local
+    connections:
+        local:
+            server:   mongodb://localhost:27017
+            database: symfony2_local_%kernel.environment%

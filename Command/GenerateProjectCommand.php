@@ -41,7 +41,7 @@ class GenerateProjectCommand extends Command
             ->addOption('session-start', null, InputOption::VALUE_NONE, 'To start session automatically')
             ->addOption('session-name', null, InputOption::VALUE_REQUIRED, 'Session name', 'symfony')
             ->addOption('orm', null, InputOption::VALUE_REQUIRED, 'doctrine or propel', null)
-            ->addOption('odm', null, InputOption::VALUE_REQUIRED, 'mongodb', null)
+            ->addOption('odm', null, InputOption::VALUE_REQUIRED, 'mongodb or mandango', null)
             ->addOption('assetic', null, InputOption::VALUE_NONE, 'Enable assetic')
             ->addOption('swiftmailer', null, InputOption::VALUE_NONE, 'Enable swiftmailer')
             ->addOption('doctrine-migration', null, InputOption::VALUE_NONE, 'Enable doctrine migration')
@@ -307,6 +307,13 @@ EOT
                                             ));
         }
 
+        if ('mandango' === $input->getOption('odm')) {
+            $bundlesCollection->add(new Bundle(
+                                                $bundles->mandangobundle->name,
+                                                $bundles->mandangobundle->namespace
+                                            ));
+        }
+
         if ($config_user = $config->bundles->user) {
             $bundlesCollection = $this->addCustomBundlesToCollection($bundlesCollection, $config_user);
         }
@@ -407,6 +414,24 @@ EOT
             $nsCollection->add(new Nspace(
                                             $ns->doctrinemongodbodm->name,
                                             $this->extractPath($ns->doctrinemongodbodm->path)
+                                        ));
+        }
+        if ('mandango' === $input->getOption('odm')) {
+            $nsCollection->add(new Nspace(
+                                            $ns->mandangobundle->name,
+                                            $this->extractPath($ns->mandangobundle->path)
+                                        ));
+            $nsCollection->add(new Nspace(
+                                            $ns->mondator->name,
+                                            $this->extractPath($ns->mondator->path)
+                                        ));
+            $nsCollection->add(new Nspace(
+                                            $ns->mandango->name,
+                                            $this->extractPath($ns->mandango->path)
+                                        ));
+            $nsCollection->add(new Nspace(
+                                            $ns->mandangomodel->name,
+                                            $this->extractPath($ns->mandangomodel->path)
                                         ));
         }
         if ('doctrine' === $input->getOption('orm')) {
@@ -643,6 +668,26 @@ EOT
                                                     $repos->doctrinemongodbbundle->revision
                                                 ));
         }
+        if ('mandango' === $input->getOption('odm')) {
+            $reposCollection->add(new Repository(
+                                                    $repos->mandango->source,
+                                                    $repos->mandango->target,
+                                                    $this->typeOfElement($repos->mandango->revision),
+                                                    $repos->mandango->revision
+                                                ));
+            $reposCollection->add(new Repository(
+                                                    $repos->mondator->source,
+                                                    $repos->mondator->target,
+                                                    $this->typeOfElement($repos->mondator->revision),
+                                                    $repos->mondator->revision
+                                                ));
+            $reposCollection->add(new Repository(
+                                                    $repos->mandangobundle->source,
+                                                    $repos->mandangobundle->target,
+                                                    $this->typeOfElement($repos->mandangobundle->revision),
+                                                    $repos->mandangobundle->revision
+                                                ));
+        }
         if ('propel' === $input->getOption('orm')) {
             $reposCollection->add(new Repository(
                                                     $repos->propelbundle->source,
@@ -771,6 +816,8 @@ EOT
             array('{{ app }}', '{{ namespace }}'),
             array($input->getArgument('app'), $input->getArgument('vendor')),
             $routing);
+        $mandango_config = ('mandango' === $input->getOption('odm')) ? $this->loadConfigFile('mandango_config') : '';
+        $mandango_config_dev = ('mandango' === $input->getOption('odm')) ? $this->loadConfigFile('mandango_config_dev') : '';
 
         Mustache::renderDir($input->getArgument('path'), array(
             'namespace' => $input->getArgument('vendor'),
@@ -792,7 +839,9 @@ EOT
             'swiftmailer' => $swift_config,
             'swiftmailer_autoload' => $swift_autoload,
             'swiftmailer_test' => $swift_test,
-            'custom' => $customConfig
+            'custom' => $customConfig,
+            'mandango_config' => $mandango_config,
+            'mandango_config_dev' => $mandango_config_dev
         ));
     }
 
@@ -873,6 +922,10 @@ EOT
      */
     private function extractPath($path)
     {
+        if (null === $path) {
+            throw new \RuntimeException('Missing configuration on your profile (section: namespaces)');
+        }
+
         $_path = array();
         foreach ($path as $p) {
             $_path[] = $p;

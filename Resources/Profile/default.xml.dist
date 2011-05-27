@@ -98,6 +98,21 @@
                 <target>vendor/propel</target>
                 <revision type="branch">master</revision>
             </propel>
+            <mandango>
+                <source>github.com/mandango/mandango.git</source>
+                <target>vendor/mandango</target>
+                <revision type="branch">master</revision>
+            </mandango>
+            <mondator>
+                <source>github.com/mandango/mondator.git</source>
+                <target>vendor/mondator</target>
+                <revision type="branch">master</revision>
+            </mondator>
+            <mandangobundle>
+                <source>github.com/mandango/MandangoBundle.git</source>
+                <target>vendor/bundles/Mandango/MandangoBundle</target>
+                <revision type="branch">master</revision>
+            </mandangobundle>
         </installer>
         
         <!-- Add your custom repository here -->
@@ -155,6 +170,10 @@
                 <name>DoctrineMongoDB</name>
                 <namespace>Symfony\Bundle\DoctrineMongoDBBundle</namespace>
             </doctrinemongodb>
+            <mandangobundle>
+                <name>Mandango</name>
+                <namespace>Mandango\MandangoBundle</namespace>
+            </mandangobundle>
         </installer>
 
         <!-- Add your custom bundle here -->
@@ -238,6 +257,22 @@ fos_user:
                 <name>Monolog</name>
                 <path>vendor/monolog/src</path>
             </monolog>
+            <mandangobundle>
+                <name>Mandango\MandangoBundle</name>
+                <path>vendor/bundles</path>
+            </mandangobundle>
+            <mondator>
+                <name>Mondator</name>
+                <path>vendor/mondator/src</path>
+            </mondator>
+            <mandango>
+                <name>Mandango</name>
+                <path>vendor/mondator/src</path>
+            </mandango>
+            <mandangomodel>
+                <name>Model</name>
+                <path>src</path>
+            </mandangomodel>
         </installer>
         
         <!-- Add your custom namespace here -->
