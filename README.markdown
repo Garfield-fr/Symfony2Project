@@ -21,7 +21,7 @@
     --session-start        : To start session automatically
     --session-name         : Session name (default: symfony)
     --orm                  : doctrine or propel
-    --odm                  : mongodb
+    --odm                  : mongodb or mandango
     --assetic              : Enable assetic
     --swiftmailer          : Enable swiftmailer
     --doctrine-migration   : Enable doctrine migration
