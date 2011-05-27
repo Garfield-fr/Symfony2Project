@@ -13,3 +13,5 @@ $loader->register();
 $loader->registerPrefixFallback(array(
     __DIR__.'/../vendor/symfony/src/Symfony/Component/Locale/Resources/stubs',
 ));
+
+{{ swiftmailer_autoload }}

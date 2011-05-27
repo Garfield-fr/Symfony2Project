@@ -1,0 +1,4 @@
+
+## Swiftmailer Configuration
+swiftmailer:
+    disable_delivery: true

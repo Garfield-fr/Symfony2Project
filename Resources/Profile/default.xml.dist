@@ -262,10 +262,6 @@ fos_user:
                 <name>Twig</name>
                 <path>vendor/twig/lib</path>
             </twig>
-            <swiftmailer>
-                <name>Swift</name>
-                <path>vendor/swiftmailer/lib/classes</path>
-            </swiftmailer>
         </installer>
         
         <!-- Add your custom prefix here -->

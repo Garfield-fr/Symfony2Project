@@ -488,12 +488,6 @@ EOT
                                                 $prefixes->twig->path
                                             ));
         }
-        if ($input->getOption('swiftmailer')) {
-            $prefixCollection->add(new Prefix(
-                                                $prefixes->swiftmailer->name,
-                                                $prefixes->swiftmailer->path
-                                            ));
-        }
 
         if ($config_user = $config->prefixes->user) {
             $prefixCollection = $this->addCustomPrefixesToCollection($prefixCollection, $config_user);
@@ -770,6 +764,8 @@ EOT
             $doctrine_config);
         $propel_config = ('propel' === $input->getOption('orm')) ? $this->loadConfigFile('propel') : '';
         $swift_config = ($input->getOption('swiftmailer')) ? $this->loadConfigFile('swiftmailer') : '';
+        $swift_autoload = ($input->getOption('swiftmailer')) ? $this->loadConfigFile('swiftmailer_autoload') : '';
+        $swift_test = ($input->getOption('swiftmailer')) ? $this->loadConfigFile('swiftmailer_test') : '';
         $routing = ($input->getOption('controller')) ? $this->loadConfigFile('routing') : '';
         $routing = str_replace(
             array('{{ app }}', '{{ namespace }}'),
@@ -794,6 +790,8 @@ EOT
             'doctrine' => $doctrine_config,
             'propel' => $propel_config,
             'swiftmailer' => $swift_config,
+            'swiftmailer_autoload' => $swift_autoload,
+            'swiftmailer_test' => $swift_test,
             'custom' => $customConfig
         ));
     }
