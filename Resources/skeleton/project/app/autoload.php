@@ -9,9 +9,12 @@ $loader->registerNamespaces(array(
 $loader->registerPrefixes(array(
     {{ registerPrefixes }}
 ));
-$loader->register();
-$loader->registerPrefixFallback(array(
+$loader->registerPrefixFallbacks(array(
     __DIR__.'/../vendor/symfony/src/Symfony/Component/Locale/Resources/stubs',
 ));
+$loader->registerNamespaceFallbacks(array(
+    __DIR__.'/../src',
+));
+$loader->register();
 
 {{ swiftmailer_autoload }}
