@@ -583,6 +583,12 @@ EOT
                                                     $this->typeOfElement($repos->assetic->revision),
                                                     $repos->assetic->revision
                                                 ));
+            $reposCollection->add(new Repository(
+                                                    $repos->asseticbundle->source,
+                                                    $repos->asseticbundle->target,
+                                                    $this->typeOfElement($repos->asseticbundle->revision),
+                                                    $repos->asseticbundle->revision
+                                                ));
         }
         if ('twig' === $input->getOption('template-engine')) {
             $reposCollection->add(new Repository(

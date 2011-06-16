@@ -23,6 +23,11 @@
                 <target>vendor/assetic</target>
                 <revision type="branch">master</revision>
             </assetic>
+            <asseticbundle>
+                <source>github.com/symfony/AsseticBundle.git</source>
+                <target>vendor/bundles/Symfony/Bundle/AsseticBundle</target>
+                <revision type="branch">master</revision>
+            </asseticbundle>
             <twig>
                 <source>github.com/fabpot/Twig.git</source>
                 <target>vendor/twig</target>
