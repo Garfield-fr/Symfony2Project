@@ -41,12 +41,12 @@
             <doctrine>
                 <source>github.com/doctrine/doctrine2.git</source>
                 <target>vendor/doctrine</target>
-                <revision type="tag">master</revision>
+                <revision type="tag">2.1.0</revision>
             </doctrine>
             <doctrinedbal>
                 <source>github.com/doctrine/dbal.git</source>
                 <target>vendor/doctrine-dbal</target>
-                <revision type="tag">master</revision>
+                <revision type="tag">2.1.0</revision>
             </doctrinedbal>
             <doctrinedatafixtures>
                 <source>github.com/doctrine/data-fixtures.git</source>
@@ -71,7 +71,7 @@
             <doctrinecommon>
                 <source>github.com/doctrine/common.git</source>
                 <target>vendor/doctrine-common</target>
-                <revision type="branch">3.0.x</revision>
+                <revision type="branch">2.1.0</revision>
             </doctrinecommon>
             <doctrinemongodb>
                 <source>github.com/doctrine/mongodb.git</source>
