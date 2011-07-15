@@ -27,6 +27,7 @@ AnnotationRegistry::registerLoader(function($class) use ($loader) {
     $loader->loadClass($class);
     return class_exists($class, false);
 });
-AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
 
+{{ annotation_orm }}
+{{ annotation_odm }}
 {{ swiftmailer_autoload }}

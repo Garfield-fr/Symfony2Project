@@ -824,6 +824,9 @@ EOT
             $routing);
         $mandango_config = ('mandango' === $input->getOption('odm')) ? $this->loadConfigFile('mandango_config') : '';
         $mandango_config_dev = ('mandango' === $input->getOption('odm')) ? $this->loadConfigFile('mandango_config_dev') : '';
+        
+        $annotation_orm = ($input->getOption('orm')) ? $this->loadConfigFile('annotation_orm') : '';
+        $annotation_odm = ($input->getOption('odm')) ? $this->loadConfigFile('annotation_odm') : '';
 
         Mustache::renderDir($input->getArgument('path'), array(
             'namespace' => $input->getArgument('vendor'),
@@ -847,7 +850,9 @@ EOT
             'swiftmailer_test' => $swift_test,
             'custom' => $customConfig,
             'mandango_config' => $mandango_config,
-            'mandango_config_dev' => $mandango_config_dev
+            'mandango_config_dev' => $mandango_config_dev,
+            'annotation_orm' => $annotation_orm,
+            'annotation_odm' => $annotation_odm
         ));
     }
 
