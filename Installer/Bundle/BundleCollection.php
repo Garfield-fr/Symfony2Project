@@ -11,7 +11,7 @@ namespace Installer\Bundle;
 class BundleCollection
 {
     protected $collection;
-    
+
     public function add($bundle)
     {
         $this->collection[] = $bundle;
@@ -29,7 +29,7 @@ class BundleCollection
         {
             $bundles .= $bundle->get().",\n".str_repeat(' ', $space);
         }
-        
+
         return trim($bundles);
     }
 }
