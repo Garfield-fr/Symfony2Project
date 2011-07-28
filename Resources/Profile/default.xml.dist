@@ -16,7 +16,7 @@
             <swiftmailer>
                 <source>github.com/swiftmailer/swiftmailer.git</source>
                 <target>vendor/swiftmailer</target>
-                <revision type="branch">v4.1.0</revision>
+                <revision type="branch">v4.1.1</revision>
             </swiftmailer>
             <assetic>
                 <source>github.com/kriswallsmith/assetic.git</source>
