@@ -715,6 +715,13 @@ EOT
                                                 ));
         }
 
+        $reposCollection->add(new Repository(
+                                                    $repos->metadata->source,
+                                                    $repos->metadata->target,
+                                                    $this->typeOfElement($repos->metadata->revision),
+                                                    $repos->metadata->revision
+                                                ));
+
         if ($config_user = $config->repositories->user) {
             $reposCollection = $this->addCustomRepositoriesToCollection($reposCollection, $config_user);
         }
