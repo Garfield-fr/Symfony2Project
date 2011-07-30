@@ -31,7 +31,7 @@
             <twig>
                 <source>github.com/fabpot/Twig.git</source>
                 <target>vendor/twig</target>
-                <revision type="branch">v1.1.1</revision>
+                <revision type="branch">v1.1.2</revision>
             </twig>
             <twigextensions>
                 <source>github.com/fabpot/Twig-extensions.git</source>
