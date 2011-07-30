@@ -15,6 +15,7 @@ framework:
 {{ twig }}
 {{ assetic }}
 {{ doctrine }}
+{{ doctrine_mongodb }}
 {{ propel }}
 {{ swiftmailer }}
 {{ custom }}

@@ -820,6 +820,7 @@ EOT
             array('{{ app }}', '{{ namespace }}'), 
             array($input->getArgument('app'), $input->getArgument('vendor')),
             $doctrine_config);
+        $doctrine_mongodb = ('mongodb' === $input->getOption('odm')) ? $this->loadConfigFile('doctrine_mongodb') : '';
         $propel_config = ('propel' === $input->getOption('orm')) ? $this->loadConfigFile('propel') : '';
         $swift_config = ($input->getOption('swiftmailer')) ? $this->loadConfigFile('swiftmailer') : '';
         $swift_autoload = ($input->getOption('swiftmailer')) ? $this->loadConfigFile('swiftmailer_autoload') : '';
@@ -851,6 +852,7 @@ EOT
             'assetic' => $assetic_config,
             'assetic_dev' => $assetic_dev_config,
             'doctrine' => $doctrine_config,
+            'doctrine_mongodb' => $doctrine_mongodb,
             'propel' => $propel_config,
             'swiftmailer' => $swift_config,
             'swiftmailer_autoload' => $swift_autoload,
