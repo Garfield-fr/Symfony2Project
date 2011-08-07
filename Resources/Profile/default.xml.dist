@@ -89,8 +89,8 @@
                 <revision type="branch">master</revision>
             </doctrinemongodbbundle>
             <propelbundle>
-                <source>github.com/willdurand/PropelBundle.git</source>
-                <target>src/Propel/PropelBundle</target>
+                <source>github.com/propelorm/PropelBundle.git</source>
+                <target>vendor/bundles/Propel/PropelBundle</target>
                 <revision type="branch">master</revision>
             </propelbundle>
             <phing>
@@ -99,7 +99,7 @@
                 <revision type="branch">master</revision>
             </phing>
             <propel>
-                <source>github.com/Xosofox/propel1.6.git</source>
+                <source>github.com/propelorm/Propel.git</source>
                 <target>vendor/propel</target>
                 <revision type="branch">master</revision>
             </propel>
@@ -257,7 +257,7 @@ fos_user:
             </doctrine>
             <propel>
                 <name>Propel</name>
-                <path>src</path>
+                <path>vendor/bundles</path>
             </propel>
             <assetic>
                 <name>Assetic</name>
