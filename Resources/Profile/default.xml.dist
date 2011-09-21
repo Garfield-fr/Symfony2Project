@@ -16,12 +16,12 @@
             <swiftmailer>
                 <source>github.com/swiftmailer/swiftmailer.git</source>
                 <target>vendor/swiftmailer</target>
-                <revision type="branch">v4.1.1</revision>
+                <revision type="branch">v4.1.2</revision>
             </swiftmailer>
             <assetic>
                 <source>github.com/kriswallsmith/assetic.git</source>
                 <target>vendor/assetic</target>
-                <revision type="branch">v1.0.1</revision>
+                <revision type="branch">v1.0.2</revision>
             </assetic>
             <asseticbundle>
                 <source>github.com/symfony/AsseticBundle.git</source>
