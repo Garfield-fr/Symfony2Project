@@ -263,6 +263,10 @@ fos_user:
                 <name>Assetic</name>
                 <path>vendor/assetic/src</path>
             </assetic>
+            <metadata>
+                <name>Metadata</name>
+                <path>vendor/metadata/src</path>
+            </metadata>
             <monolog>
                 <name>Monolog</name>
                 <path>vendor/monolog/src</path>

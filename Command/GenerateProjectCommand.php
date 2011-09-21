@@ -460,6 +460,10 @@ EOT
                                         $ns->monolog->name,
                                         $this->extractPath($ns->monolog->path)
                                     ));
+        $nsCollection->add(new Nspace(
+                                        $ns->metadata->name,
+                                        $this->extractPath($ns->metadata->path)
+                                    ));
 
         if ($config_user = $config->namespaces->user) {
             $nsCollection = $this->addCustomNamespacesToCollection($nsCollection, $config_user);
