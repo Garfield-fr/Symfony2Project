@@ -799,7 +799,7 @@ EOT
                 exec($gitcommand);
             } else {
                 if ('master' !== $repository->getRevision()) {
-                    sprintf('git checkout -b %s origin/%s', $repository->getRevision(), $repository->getRevision());
+                    $gitcommand = sprintf('git checkout -b %s origin/%s', $repository->getRevision(), $repository->getRevision());
                     exec($gitcommand);
                 }
             }
