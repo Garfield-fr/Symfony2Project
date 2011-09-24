@@ -789,7 +789,10 @@ EOT
             $targetPath = $path.'/'.$repository->getTarget();
             chdir($targetPath);
 
-            $output->writeln(sprintf(' > <comment>Git revision %s</comment>', $repository->getRevision()));
+            $output->writeln(sprintf(' > <comment>Git revision %s %s</comment>',
+                                        $repository->getType(),
+                                        $repository->getRevision()
+                            ));
 
             if ('tag' === $repository->getType()) {
                 $gitcommand = sprintf('git checkout -b %s %s', $repository->getRevision(), $repository->getRevision());
