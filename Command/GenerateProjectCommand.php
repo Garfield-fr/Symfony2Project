@@ -791,9 +791,14 @@ EOT
 
             $output->writeln(sprintf(' > <comment>Git revision %s</comment>', $repository->getRevision()));
 
-            if ('master' !== $repository->getRevision()) {
+            if ('tag' === $repository->getType()) {
                 $gitcommand = sprintf('git checkout -b %s', $repository->getRevision());
                 exec($gitcommand);
+            } else {
+                if ('master' !== $repository->getRevision()) {
+                    $gitcommand = sprintf('git checkout -b origin/%s', $repository->getRevision());
+                    exec($gitcommand);
+                }
             }
 
             chdir($path);
