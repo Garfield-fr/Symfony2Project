@@ -6,32 +6,32 @@
             <symfony>
                 <source>github.com/symfony/symfony.git</source>
                 <target>vendor/symfony</target>
-                <revision type="branch">v2.0.1</revision>
+                <revision type="branch">2.0</revision>
             </symfony>
             <monolog>
                 <source>github.com/Seldaek/monolog.git</source>
                 <target>vendor/monolog</target>
-                <revision type="branch">1.0.1</revision>
+                <revision type="tag">1.0.1</revision>
             </monolog>
             <swiftmailer>
                 <source>github.com/swiftmailer/swiftmailer.git</source>
                 <target>vendor/swiftmailer</target>
-                <revision type="branch">v4.1.2</revision>
+                <revision type="branch">4.1</revision>
             </swiftmailer>
             <assetic>
                 <source>github.com/kriswallsmith/assetic.git</source>
                 <target>vendor/assetic</target>
-                <revision type="branch">v1.0.2</revision>
+                <revision type="branch">1.0.x</revision>
             </assetic>
             <asseticbundle>
                 <source>github.com/symfony/AsseticBundle.git</source>
                 <target>vendor/bundles/Symfony/Bundle/AsseticBundle</target>
-                <revision type="branch">v1.0.0</revision>
+                <revision type="tag">v1.0.1</revision>
             </asseticbundle>
             <twig>
                 <source>github.com/fabpot/Twig.git</source>
                 <target>vendor/twig</target>
-                <revision type="branch">v1.1.2</revision>
+                <revision type="branch">1.1</revision>
             </twig>
             <twigextensions>
                 <source>github.com/fabpot/Twig-extensions.git</source>
@@ -41,12 +41,12 @@
             <doctrine>
                 <source>github.com/doctrine/doctrine2.git</source>
                 <target>vendor/doctrine</target>
-                <revision type="tag">2.1.1</revision>
+                <revision type="branch">2.1.x</revision>
             </doctrine>
             <doctrinedbal>
                 <source>github.com/doctrine/dbal.git</source>
                 <target>vendor/doctrine-dbal</target>
-                <revision type="tag">2.1.2</revision>
+                <revision type="branch">2.1.x</revision>
             </doctrinedbal>
             <doctrinedatafixtures>
                 <source>github.com/doctrine/data-fixtures.git</source>
@@ -71,7 +71,7 @@
             <doctrinecommon>
                 <source>github.com/doctrine/common.git</source>
                 <target>vendor/doctrine-common</target>
-                <revision type="branch">2.1.1</revision>
+                <revision type="branch">2.1.x</revision>
             </doctrinecommon>
             <doctrinemongodb>
                 <source>github.com/doctrine/mongodb.git</source>
@@ -121,7 +121,7 @@
             <metadata>
                 <source>github.com/schmittjoh/metadata.git</source>
                 <target>vendor/metadata</target>
-                <revision type="branch">1.0.0</revision>
+                <revision type="branch">1.0.x</revision>
             </metadata>
         </installer>
         
