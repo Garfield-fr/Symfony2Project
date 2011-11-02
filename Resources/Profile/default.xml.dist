@@ -121,7 +121,7 @@
             <metadata>
                 <source>github.com/schmittjoh/metadata.git</source>
                 <target>vendor/metadata</target>
-                <revision type="branch">1.0.x</revision>
+                <revision type="branch">master</revision>
             </metadata>
         </installer>
         
