@@ -86,7 +86,7 @@
             <doctrinemongodbbundle>
                 <source>github.com/symfony/DoctrineMongoDBBundle.git</source>
                 <target>vendor/bundles/Symfony/Bundle/DoctrineMongoDBBundle</target>
-                <revision type="branch">master</revision>
+                <revision type="branch">2.0</revision>
             </doctrinemongodbbundle>
             <propelbundle>
                 <source>github.com/propelorm/PropelBundle.git</source>
